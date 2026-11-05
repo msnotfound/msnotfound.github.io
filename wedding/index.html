@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L'Éternel | Private Estate Wedding & Soirée</title>
+  <meta name="description" content="An intimate celebration of eternal love amidst the sun-drenched hills of Tuscany. September 18–20, 2026.">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            champagne: {
+              50: '#faf8f5',
+              100: '#f5f0e8',
+              200: '#ebe1d2',
+              300: '#decbb4',
+              400: '#c5a059',
+              500: '#b08a42',
+              600: '#8e6c30',
+              900: '#3a2b10',
+            },
+            noir: '#11100f'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    [x-cloak] { display: none !important; }
+    .gold-gradient {
+      background: linear-gradient(135deg, #c5a059 0%, #e6c888 50%, #b08a42 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .wax-seal {
+      box-shadow: 0 4px 20px rgba(176, 138, 66, 0.35);
+    }
+    .glass-editorial {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(197, 160, 89, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-[#faf8f5] text-[#2c2724] font-sans antialiased selection:bg-[#c5a059] selection:text-white" x-data="weddingApp()">
+
+  <!-- Sticky Luxury Banner & Ambient Audio Control -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" :class="scrolled ? 'bg-[#faf8f5]/95 backdrop-blur-md shadow-sm border-b border-[#ebe1d2]' : 'bg-transparent'">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="font-serif text-2xl tracking-[0.25em] text-[#11100f] uppercase font-light">
+        Camille <span class="text-[#c5a059] italic">&</span> Julien
+      </a>
+
+      <nav class="hidden md:flex items-center space-x-10 text-xs uppercase tracking-[0.2em] font-medium text-[#4a423d]">
+        <a href="#ceremony" class="hover:text-[#c5a059] transition">The Gathering</a>
+        <a href="#itinerary" class="hover:text-[#c5a059] transition">Itinerary</a>
+        <a href="#travel" class="hover:text-[#c5a059] transition">Estate & Stay</a>
+        <a href="#registry" class="hover:text-[#c5a059] transition">Endowment</a>
+        <a href="#gallery" class="hover:text-[#c5a059] transition">Memories</a>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <!-- Ambient Music Toggle -->
+        <button @click="toggleMusic()" class="p-2.5 rounded-full border border-[#c5a059]/40 hover:border-[#c5a059] transition flex items-center space-x-2 text-xs font-serif tracking-widest text-[#8e6c30]" title="Toggle Ambient Cello">
+          <svg x-show="!isPlaying" class="w-4 h-4 text-[#c5a059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+          <span x-show="isPlaying" class="flex space-x-0.5 items-end h-4 w-4">
+            <span class="w-1 bg-[#c5a059] h-3 animate-pulse"></span>
+            <span class="w-1 bg-[#c5a059] h-4 animate-bounce"></span>
+            <span class="w-1 bg-[#c5a059] h-2 animate-pulse"></span>
+          </span>
+          <span class="hidden sm:inline" x-text="isPlaying ? 'Cello No. 1 Playing' : 'Ambient Music'"></span>
+        </button>
+
+        <button @click="openRsvp = true" class="px-6 py-2.5 bg-[#11100f] hover:bg-[#c5a059] text-white text-xs font-medium uppercase tracking-[0.2em] transition duration-300 shadow-md">
+          RSVP
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center pt-20 px-6 overflow-hidden">
+    <!-- Hero Background Image with Editorial Vignette -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85" alt="Tuscany Villa" class="w-full h-full object-cover brightness-[0.92] contrast-[0.95]">
+      <div class="absolute inset-0 bg-gradient-to-b from-[#faf8f5]/40 via-transparent to-[#faf8f5]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto text-center py-24">
+      <p class="font-serif text-sm sm:text-base uppercase tracking-[0.4em] text-[#3a2b10] mb-6 font-semibold">
+        Together with their families
+      </p>
+      <h1 class="font-serif text-5xl sm:text-7xl md:text-8xl text-[#11100f] font-light leading-[1.05] tracking-tight mb-8">
+        Camille Laurent <br>
+        <span class="italic font-normal text-[#c5a059] font-serif">&</span> Julien De Vries
+      </h1>
+      <p class="font-sans text-xs sm:text-sm uppercase tracking-[0.3em] text-[#5c544e] max-w-xl mx-auto mb-10 leading-relaxed">
+        Request the honour of your presence at the celebration of their marriage
+      </p>
+
+      <div class="inline-flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 py-6 px-10 glass-editorial rounded-2xl shadow-xl mb-12">
+        <div>
+          <span class="block font-serif text-3xl text-[#11100f]">September 18, 2026</span>
+          <span class="text-[10px] uppercase font-sans tracking-[0.25em] text-[#8e6c30]">Friday through Sunday</span>
+        </div>
+        <div class="hidden sm:block w-px h-10 bg-[#decbb4]"></div>
+        <div>
+          <span class="block font-serif text-3xl text-[#11100f]">Villa Cetinale</span>
+          <span class="text-[10px] uppercase font-sans tracking-[0.25em] text-[#8e6c30]">Sovicille, Siena • Tuscany</span>
+        </div>
+      </div>
+
+      <!-- Live Countdown Engine -->
+      <div class="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto mb-12">
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+          <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.days">00</span>
+          <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Days</span>
+        </div>
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+          <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.hours">00</span>
+          <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Hours</span>
+        </div>
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+          <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.minutes">00</span>
+          <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Minutes</span>
+        </div>
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+          <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.seconds">00</span>
+          <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Seconds</span>
+        </div>
+      </div>
+
+      <div>
+        <button @click="openRsvp = true" class="px-10 py-4 bg-[#11100f] hover:bg-[#c5a059] text-white text-xs uppercase tracking-[0.3em] font-medium shadow-2xl transition-all duration-300 transform hover:-translate-y-0.5">
+          Reserve Your Attendance
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editorial Quote & Narrative -->
+  <section class="py-24 px-6 border-t border-[#ebe1d2] bg-white">
+    <div class="max-w-3xl mx-auto text-center">
+      <span class="text-[#c5a059] text-4xl font-serif">❦</span>
+      <h2 class="font-serif text-3xl sm:text-4xl text-[#11100f] italic font-light leading-relaxed my-6">
+        "We have found the one whom our soul loves, under ancient cypress trees and open Italian skies."
+      </h2>
+      <p class="text-sm font-sans text-[#635b54] leading-relaxed max-w-xl mx-auto tracking-wide">
+        After seven years of wanderlust, shared quiet mornings, and adventures across four continents, we invite our closest inner circle to join us for an unforgettable three-day weekend celebration in the Tuscan countryside.
+      </p>
+    </div>
+  </section>
+
+  <!-- Interactive Itinerary Section -->
+  <section id="itinerary" class="py-24 px-6 bg-[#faf8f5] border-t border-[#ebe1d2]">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-xs uppercase tracking-[0.3em] text-[#8e6c30] font-semibold">The Schedule of Celebrations</span>
+        <h2 class="font-serif text-4xl sm:text-5xl text-[#11100f] mt-3">Three Days in Tuscany</h2>
+        <div class="w-12 h-px bg-[#c5a059] mx-auto mt-6"></div>
+      </div>
+
+      <!-- Tabbed Days Selector -->
+      <div class="flex justify-center space-x-2 sm:space-x-4 mb-14">
+        <button @click="activeDay = 1" :class="activeDay === 1 ? 'bg-[#11100f] text-white shadow-lg' : 'bg-white text-[#5c544e] border border-[#ebe1d2] hover:bg-[#f5f0e8]'" class="px-6 py-3 text-xs uppercase tracking-[0.2em] font-medium transition rounded-lg">
+          Day 01 • Friday Welcome
+        </button>
+        <button @click="activeDay = 2" :class="activeDay === 2 ? 'bg-[#11100f] text-white shadow-lg' : 'bg-white text-[#5c544e] border border-[#ebe1d2] hover:bg-[#f5f0e8]'" class="px-6 py-3 text-xs uppercase tracking-[0.2em] font-medium transition rounded-lg">
+          Day 02 • Saturday The Vows
+        </button>
+        <button @click="activeDay = 3" :class="activeDay === 3 ? 'bg-[#11100f] text-white shadow-lg' : 'bg-white text-[#5c544e] border border-[#ebe1d2] hover:bg-[#f5f0e8]'" class="px-6 py-3 text-xs uppercase tracking-[0.2em] font-medium transition rounded-lg">
+          Day 03 • Sunday Farewell
+        </button>
+      </div>
+
+      <!-- Day 1 Timeline -->
+      <div x-show="activeDay === 1" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="max-w-3xl mx-auto space-y-8">
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">17:00 • The Welcome Terrace</span>
+            <h3 class="font-serif text-2xl text-[#11100f]">Aperitivo al Tramonto</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed">Chilled Franciacorta, local charcuterie, and artisanal Tuscan pecorino while the sun dips behind the hills.</p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="inline-block px-3 py-1 bg-[#faf8f5] text-[10px] uppercase tracking-widest text-[#8e6c30] border border-[#ebe1d2] rounded">Linen & Earthy Hues</span>
+          </div>
+        </div>
+
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">20:00 • The Lemon Grove Garden</span>
+            <h3 class="font-serif text-2xl text-[#11100f]">Welcome Wood-Fired Pizza Feast</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed">Handcrafted sourdough pizzas made live by master pizzaioli, accompanied by Chianti Classico selections.</p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="inline-block px-3 py-1 bg-[#faf8f5] text-[10px] uppercase tracking-widest text-[#8e6c30] border border-[#ebe1d2] rounded">Smart Casual</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 2 Timeline -->
+      <div x-show="activeDay === 2" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="max-w-3xl mx-auto space-y-8">
+        <div class="p-8 bg-white rounded-2xl border border-[#c5a059]/40 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase font-semibold">16:30 • The Cypress Aisle</span>
+            <h3 class="font-serif text-2xl text-[#11100f]">The Sacred Matrimonial Vows</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed">Exchange of rings and vows under the 300-year-old stone arches, accompanied by string quartet.</p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="inline-block px-3 py-1 bg-[#11100f] text-[10px] uppercase tracking-widest text-white rounded">Black Tie Optional</span>
+          </div>
+        </div>
+
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">18:00 • The Belvedere Court</span>
+            <h3 class="font-serif text-2xl text-[#11100f]">Champagne & Canapés Reception</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed">Golden hour portraits, vintage Dom Pérignon, and live French jazz quintet.</p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="inline-block px-3 py-1 bg-[#faf8f5] text-[10px] uppercase tracking-widest text-[#8e6c30] border border-[#ebe1d2] rounded">Cocktail Hour</span>
+          </div>
+        </div>
+
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">20:30 • The Grand Courtyard</span>
+            <h3 class="font-serif text-2xl text-[#11100f]">Four-Course Candlelit Banqueting & Dancing</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed">Truffle agnolotti, Florentine steak, mille-feuille cutting, followed by midnight fireworks and DJ.</p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="inline-block px-3 py-1 bg-[#faf8f5] text-[10px] uppercase tracking-widest text-[#8e6c30] border border-[#ebe1d2] rounded">All-Night Celebration</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 3 Timeline -->
+      <div x-show="activeDay === 3" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="max-w-3xl mx-auto space-y-8">
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">11:30 • The Olive Grove Poolside</span>
+            <h3 class="font-serif text-2xl text-[#11100f]">Post-Wedding Recovery Brunch & Bloody Marys</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed">Fresh brioche, espresso bar, cold-pressed juices, and farewell embrace under the morning sun.</p>
+          </div>
+          <div class="text-left md:text-right shrink-0">
+            <span class="inline-block px-3 py-1 bg-[#faf8f5] text-[10px] uppercase tracking-widest text-[#8e6c30] border border-[#ebe1d2] rounded">Poolside Resort Wear</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Dress Code & Palette Guide -->
+  <section class="py-20 px-6 bg-white border-t border-[#ebe1d2]">
+    <div class="max-w-4xl mx-auto text-center">
+      <span class="text-xs uppercase tracking-[0.3em] text-[#8e6c30] font-semibold">Attire Inspiration</span>
+      <h2 class="font-serif text-3xl sm:text-4xl text-[#11100f] mt-2 mb-4">Sartorial Guidance & Color Story</h2>
+      <p class="text-xs text-[#635b54] max-w-lg mx-auto mb-10 leading-relaxed">
+        We kindly request our guests to dress in formal elegance matching our Tuscan evening palette. Avoid white, ivory, or neon shades.
+      </p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+          <div class="w-full h-16 rounded-lg bg-[#27372c] mb-3 shadow-inner"></div>
+          <span class="block text-xs font-serif text-[#11100f] font-semibold">Tuscan Cypress</span>
+          <span class="text-[10px] font-mono text-slate-400">#27372C</span>
+        </div>
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+          <div class="w-full h-16 rounded-lg bg-[#44352a] mb-3 shadow-inner"></div>
+          <span class="block text-xs font-serif text-[#11100f] font-semibold">Aged Terracotta</span>
+          <span class="text-[10px] font-mono text-slate-400">#44352A</span>
+        </div>
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+          <div class="w-full h-16 rounded-lg bg-[#c5a059] mb-3 shadow-inner"></div>
+          <span class="block text-xs font-serif text-[#11100f] font-semibold">Sienna Ochre</span>
+          <span class="text-[10px] font-mono text-slate-400">#C5A059</span>
+        </div>
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+          <div class="w-full h-16 rounded-lg bg-[#2b3543] mb-3 shadow-inner"></div>
+          <span class="block text-xs font-serif text-[#11100f] font-semibold">Midnight Twilight</span>
+          <span class="text-[10px] font-mono text-slate-400">#2B3543</span>
+        </div>
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+          <div class="w-full h-16 rounded-lg bg-[#e8decb] mb-3 shadow-inner"></div>
+          <span class="block text-xs font-serif text-[#11100f] font-semibold">Travertine Gold</span>
+          <span class="text-[10px] font-mono text-slate-400">#E8DECB</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Gift Registry & Honeymoon Endowment -->
+  <section id="registry" class="py-24 px-6 bg-[#faf8f5] border-t border-[#ebe1d2]">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-xs uppercase tracking-[0.3em] text-[#8e6c30] font-semibold">Your Presence Is Our Greatest Gift</span>
+        <h2 class="font-serif text-4xl sm:text-5xl text-[#11100f] mt-3">Honeymoon & Endowment Registry</h2>
+        <p class="text-xs text-[#635b54] max-w-lg mx-auto mt-4 leading-relaxed">
+          Should you wish to honor us with a gift, we have established dedicated funds for our dream adventure across the Amalfi Coast and Japanese Alps.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Fund 1 -->
+        <div class="bg-white rounded-2xl p-8 border border-[#ebe1d2] shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-[#faf8f5] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            </div>
+            <h3 class="font-serif text-2xl text-[#11100f] mb-2">Amalfi Private Yacht Charter</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed mb-6">Sunset navigation around Capri, private secluded grottos, and chef banquet at sea.</p>
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono text-[#8e6c30] mb-1">
+                <span>Funded: $3,200</span>
+                <span>Goal: $5,000</span>
+              </div>
+              <div class="w-full bg-[#f5f0e8] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#c5a059] h-full rounded-full" style="width: 64%"></div>
+              </div>
+            </div>
+          </div>
+          <button @click="openContributionModal('Amalfi Private Yacht Charter')" class="w-full py-3 bg-[#faf8f5] hover:bg-[#11100f] hover:text-white border border-[#ebe1d2] text-[#11100f] text-xs uppercase tracking-widest font-semibold transition rounded-lg">
+            Contribute to Fund
+          </button>
+        </div>
+
+        <!-- Fund 2 -->
+        <div class="bg-white rounded-2xl p-8 border border-[#c5a059]/40 shadow-md flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-[#c5a059] text-white text-[9px] uppercase tracking-widest px-3 py-1 rounded-bl">
+            Most Popular
+          </div>
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-[#faf8f5] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9V9a2 2 0 00-2-2H8a2 2 0 00-2 2v3h12z"/></svg>
+            </div>
+            <h3 class="font-serif text-2xl text-[#11100f] mb-2">Kyoto Ryokan & Onsen Stay</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed mb-6">Traditional Japanese cedarwood inn retreat, kaiseki dining, and private mountain hot springs.</p>
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono text-[#8e6c30] mb-1">
+                <span>Funded: $4,850</span>
+                <span>Goal: $6,000</span>
+              </div>
+              <div class="w-full bg-[#f5f0e8] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#c5a059] h-full rounded-full" style="width: 81%"></div>
+              </div>
+            </div>
+          </div>
+          <button @click="openContributionModal('Kyoto Ryokan & Onsen Stay')" class="w-full py-3 bg-[#11100f] hover:bg-[#c5a059] text-white text-xs uppercase tracking-widest font-semibold transition rounded-lg shadow">
+            Contribute to Fund
+          </button>
+        </div>
+
+        <!-- Fund 3 -->
+        <div class="bg-white rounded-2xl p-8 border border-[#ebe1d2] shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-[#faf8f5] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            </div>
+            <h3 class="font-serif text-2xl text-[#11100f] mb-2">Grand Cru Tuscan Cellar Reserve</h3>
+            <p class="text-xs text-[#635b54] leading-relaxed mb-6">Curated collection of 2016 Brunello di Montalcino and Sassicaia to open on milestone anniversaries.</p>
+            <div class="mb-4">
+              <div class="flex justify-between text-xs font-mono text-[#8e6c30] mb-1">
+                <span>Funded: $2,100</span>
+                <span>Goal: $3,500</span>
+              </div>
+              <div class="w-full bg-[#f5f0e8] h-2 rounded-full overflow-hidden">
+                <div class="bg-[#c5a059] h-full rounded-full" style="width: 60%"></div>
+              </div>
+            </div>
+          </div>
+          <button @click="openContributionModal('Grand Cru Tuscan Cellar Reserve')" class="w-full py-3 bg-[#faf8f5] hover:bg-[#11100f] hover:text-white border border-[#ebe1d2] text-[#11100f] text-xs uppercase tracking-widest font-semibold transition rounded-lg">
+            Contribute to Fund
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive RSVP Modal -->
+  <div x-show="openRsvp" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition:enter="transition ease-out duration-300 opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200 opacity-100" x-transition:leave-end="opacity-0">
+    <div class="bg-[#faf8f5] w-full max-w-xl rounded-2xl shadow-2xl border border-[#ebe1d2] p-8 sm:p-10 relative overflow-hidden" @click.away="openRsvp = false">
+      <button @click="openRsvp = false" class="absolute top-6 right-6 text-slate-400 hover:text-slate-800 text-lg">✕</button>
+
+      <!-- Confirmation Screen -->
+      <div x-show="rsvpSubmitted" class="text-center py-10 space-y-4">
+        <div class="w-20 h-20 mx-auto rounded-full bg-[#c5a059] text-white flex items-center justify-center text-3xl shadow-xl wax-seal font-serif">
+          C❦J
+        </div>
+        <h3 class="font-serif text-3xl text-[#11100f]">Your Presence Is Sealed</h3>
+        <p class="text-xs text-[#635b54] max-w-md mx-auto leading-relaxed">
+          Thank you, <span class="font-bold text-[#11100f]" x-text="guestName"></span>. We have inscribed your response into the Villa Cetinale registry. A personalized concierge itinerary has been dispatched to your email.
+        </p>
+        <button @click="openRsvp = false; rsvpSubmitted = false" class="mt-6 px-8 py-3 bg-[#11100f] text-white text-xs uppercase tracking-widest rounded-lg">
+          Return to Invitation
+        </button>
+      </div>
+
+      <!-- RSVP Form -->
+      <form x-show="!rsvpSubmitted" @submit.prevent="submitRsvp()" class="space-y-6">
+        <div class="text-center">
+          <span class="text-[10px] uppercase font-sans tracking-[0.3em] text-[#8e6c30]">Répondez S'il Vous Plaît</span>
+          <h3 class="font-serif text-3xl text-[#11100f] mt-1">Confirm Your Attendance</h3>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a423d] mb-1.5">Full Guest Name *</label>
+          <input type="text" x-model="guestName" required placeholder="e.g. Eleanor Vance & Partner" class="w-full px-4 py-3 bg-white border border-[#ebe1d2] rounded-lg text-sm focus:outline-none focus:border-[#c5a059] transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a423d] mb-1.5">Email Address *</label>
+          <input type="email" x-model="guestEmail" required placeholder="For private travel coordination" class="w-full px-4 py-3 bg-white border border-[#ebe1d2] rounded-lg text-sm focus:outline-none focus:border-[#c5a059] transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a423d] mb-2">Will You Grace Us With Your Presence?</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button type="button" @click="attendance = 'accept'" :class="attendance === 'accept' ? 'bg-[#11100f] text-white border-[#11100f]' : 'bg-white text-slate-700 border-[#ebe1d2]'" class="py-3 px-4 border rounded-lg text-xs font-semibold transition text-center">
+              ✓ Joyfully Accept
+            </button>
+            <button type="button" @click="attendance = 'decline'" :class="attendance === 'decline' ? 'bg-[#11100f] text-white border-[#11100f]' : 'bg-white text-slate-700 border-[#ebe1d2]'" class="py-3 px-4 border rounded-lg text-xs font-semibold transition text-center">
+              ✕ Regretfully Decline
+            </button>
+          </div>
+        </div>
+
+        <div x-show="attendance === 'accept'" class="space-y-4 pt-2 border-t border-[#ebe1d2]">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a423d] mb-1.5">Dietary & Banqueting Preferences</label>
+            <select x-model="dietary" class="w-full px-4 py-3 bg-white border border-[#ebe1d2] rounded-lg text-sm focus:outline-none focus:border-[#c5a059] transition">
+              <option value="chef">Chef's Tasting Menu (Classic Tuscan)</option>
+              <option value="vegetarian">Artisanal Vegetarian</option>
+              <option value="vegan">Mediterranean Plant-Based Vegan</option>
+              <option value="gluten-free">Strict Gluten-Free</option>
+              <option value="halal">Halal Prepared</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a423d] mb-1.5">Song Request for the Orchestra / DJ</label>
+            <input type="text" x-model="songRequest" placeholder="A melody that guarantees you dance" class="w-full px-4 py-3 bg-white border border-[#ebe1d2] rounded-lg text-sm focus:outline-none focus:border-[#c5a059] transition">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-4 bg-[#11100f] hover:bg-[#c5a059] text-white text-xs uppercase tracking-[0.25em] font-medium transition duration-300 rounded-lg shadow-lg">
+          Seal Response
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Interactive Contribution Modal -->
+  <div x-show="openContribution" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-[#faf8f5] w-full max-w-md rounded-2xl shadow-2xl border border-[#ebe1d2] p-8 relative" @click.away="openContribution = false">
+      <button @click="openContribution = false" class="absolute top-6 right-6 text-slate-400 hover:text-slate-800 text-lg">✕</button>
+      <div class="text-center mb-6">
+        <span class="text-[10px] uppercase font-sans tracking-[0.25em] text-[#8e6c30]">Endowment Registry</span>
+        <h3 class="font-serif text-2xl text-[#11100f] mt-1" x-text="selectedFund"></h3>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a423d] mb-1.5">Select Pledge Amount</label>
+          <div class="grid grid-cols-4 gap-2">
+            <button @click="pledgeAmount = 100" :class="pledgeAmount === 100 ? 'bg-[#c5a059] text-white' : 'bg-white text-slate-700 border border-[#ebe1d2]'" class="py-2.5 rounded text-xs font-bold transition">$100</button>
+            <button @click="pledgeAmount = 250" :class="pledgeAmount === 250 ? 'bg-[#c5a059] text-white' : 'bg-white text-slate-700 border border-[#ebe1d2]'" class="py-2.5 rounded text-xs font-bold transition">$250</button>
+            <button @click="pledgeAmount = 500" :class="pledgeAmount === 500 ? 'bg-[#c5a059] text-white' : 'bg-white text-slate-700 border border-[#ebe1d2]'" class="py-2.5 rounded text-xs font-bold transition">$500</button>
+            <button @click="pledgeAmount = 1000" :class="pledgeAmount === 1000 ? 'bg-[#c5a059] text-white' : 'bg-white text-slate-700 border border-[#ebe1d2]'" class="py-2.5 rounded text-xs font-bold transition">$1,000</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a423d] mb-1.5">Note for Camille & Julien</label>
+          <textarea rows="3" placeholder="Wishing you a lifetime of joy..." class="w-full p-3 bg-white border border-[#ebe1d2] rounded-lg text-sm"></textarea>
+        </div>
+        <button @click="completeContribution()" class="w-full py-3.5 bg-[#11100f] hover:bg-[#c5a059] text-white text-xs uppercase tracking-widest font-semibold transition rounded-lg">
+          Complete Pledge (<span x-text="'$' + pledgeAmount"></span>)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-16 px-6 bg-[#11100f] text-slate-400 text-center border-t border-slate-900">
+    <div class="max-w-2xl mx-auto space-y-4">
+      <div class="font-serif text-3xl tracking-[0.2em] text-[#faf8f5] uppercase font-light">
+        Camille <span class="text-[#c5a059] italic">&</span> Julien
+      </div>
+      <p class="text-xs uppercase tracking-[0.25em] text-[#8e6c30]">
+        Villa Cetinale • Sovicille, Tuscany • September 2026
+      </p>
+      <div class="pt-6 text-[11px] text-slate-500 font-sans">
+        Engineered with bespoke luxury digital craft by <a href="https://msnotfound.github.io" class="text-[#c5a059] hover:underline font-mono">Mayank Sahu</a>. Custom 48-hour turnarounds for high-end celebrations.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function weddingApp() {
+      return {
+        scrolled: false,
+        activeDay: 2,
+        openRsvp: false,
+        openContribution: false,
+        rsvpSubmitted: false,
+        selectedFund: '',
+        pledgeAmount: 250,
+        guestName: '',
+        guestEmail: '',
+        attendance: 'accept',
+        dietary: 'chef',
+        songRequest: '',
+        isPlaying: false,
+        countdown: { days: '00', hours: '00', minutes: '00', seconds: '00' },
+
+        init() {
+          window.addEventListener('scroll', () => {
+            this.scrolled = window.scrollY > 50;
+          });
+          this.updateCountdown();
+          setInterval(() => this.updateCountdown(), 1000);
+        },
+
+        updateCountdown() {
+          const target = new Date('2026-09-18T16:30:00+02:00').getTime();
+          const now = new Date().getTime();
+          const diff = Math.max(0, target - now);
+
+          this.countdown.days = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+          this.countdown.hours = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+          this.countdown.minutes = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+          this.countdown.seconds = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+        },
+
+        toggleMusic() {
+          this.isPlaying = !this.isPlaying;
+        },
+
+        openContributionModal(fund) {
+          this.selectedFund = fund;
+          this.openContribution = true;
+        },
+
+        completeContribution() {
+          alert('Thank you for pledging $' + this.pledgeAmount + ' to ' + this.selectedFund + '! (Demo Mode: Payment simulated successfully)');
+          this.openContribution = false;
+        },
+
+        submitRsvp() {
+          this.rsvpSubmitted = true;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

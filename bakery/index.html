@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VELVET & CRUMB | Artisanal Viennoiserie & Specialty Coffee</title>
+  <meta name="description" content="Slow-fermented sourdough, 72-layer laminated viennoiserie, and single-origin roast espresso. Fresh from the stone hearth daily.">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            display: ['"Syne"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            crust: {
+              950: '#140f0c',
+              900: '#1f1712',
+              800: '#2d221b',
+              warm: '#fbf8f3',
+              butter: '#f5ebe0',
+              caramel: '#c77935',
+              gold: '#d4af37'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    [x-cloak] { display: none !important; }
+    .glass-crumb {
+      background: rgba(251, 248, 243, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(199, 121, 53, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-[#fbf8f3] text-[#2b211b] font-sans antialiased selection:bg-[#c77935] selection:text-white" x-data="bakeryApp()">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-[#140f0c] text-[#f5ebe0] text-xs py-2 px-4 text-center font-sans tracking-wider border-b border-[#2d221b]">
+    <div class="max-w-7xl mx-auto flex items-center justify-center space-x-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>Stone Hearth Oven #1: Batch #3 Pistachio Pain Suisse is coming out in <strong>14 minutes</strong>.</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="sticky top-0 z-40 bg-[#fbf8f3]/95 backdrop-blur-md border-b border-[#f5ebe0]">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full bg-[#140f0c] text-[#d4af37] flex items-center justify-center font-serif text-2xl font-light">
+          V
+        </div>
+        <div>
+          <span class="font-display font-bold text-lg tracking-wider text-[#140f0c] uppercase">Velvet & Crumb</span>
+          <span class="text-[10px] block font-serif tracking-[0.25em] text-[#c77935] uppercase">Viennoiserie & Espresso</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center space-x-8 text-xs uppercase tracking-[0.2em] font-medium text-[#4a3b32]">
+        <a href="#schedule" class="hover:text-[#c77935] transition">Bake Schedule</a>
+        <a href="#menu" class="hover:text-[#c77935] transition">Morning Menu</a>
+        <a href="#box-builder" class="hover:text-[#c77935] transition">Pastry Box Builder</a>
+        <a href="#craft" class="hover:text-[#c77935] transition">72-Hour Ferment</a>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <a href="#box-builder" class="px-5 py-2.5 bg-[#140f0c] hover:bg-[#c77935] text-white text-xs uppercase tracking-widest font-semibold rounded-lg shadow-sm transition">
+          Build Morning Box (<span x-text="'$' + cartTotal()"></span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-[85vh] flex items-center justify-center px-6 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=2000&q=85" alt="Fresh artisan bread and croissants" class="w-full h-full object-cover brightness-[0.88] contrast-[0.98]">
+      <div class="absolute inset-0 bg-gradient-to-t from-[#fbf8f3] via-[#fbf8f3]/50 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto text-center py-24">
+      <span class="inline-block text-xs uppercase tracking-[0.35em] text-[#140f0c] font-bold mb-4 bg-white/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-[#f5ebe0]">
+        Pure Grass-Fed Normandy Butter • Organic French Flour
+      </span>
+      <h1 class="font-serif text-5xl sm:text-7xl md:text-8xl text-[#140f0c] font-light leading-[1.05] tracking-tight mb-6">
+        Warm Flakes. <br>
+        <span class="italic font-normal text-[#c77935]">Slow Fermentation.</span>
+      </h1>
+      <p class="text-[#4a3b32] text-sm sm:text-base max-w-xl mx-auto mb-10 leading-relaxed font-sans">
+        Baked fresh at 05:00 each morning using 72-layer hand-lamination and slow 48-hour levain. Pre-order your bespoke morning pastry box for rapid contactless pickup.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#box-builder" class="px-8 py-4 bg-[#140f0c] hover:bg-[#c77935] text-white text-xs uppercase tracking-[0.25em] font-semibold rounded-xl shadow-xl transition transform hover:-translate-y-0.5">
+          Build Custom Pastry Box
+        </a>
+        <a href="#schedule" class="px-8 py-4 bg-white hover:bg-[#f5ebe0] text-[#140f0c] border border-[#f5ebe0] text-xs uppercase tracking-[0.25em] font-semibold rounded-xl shadow-sm transition">
+          View Daily Oven Clock
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Oven Clock & Fresh Batch Tracker -->
+  <section id="schedule" class="py-20 px-6 bg-white border-y border-[#f5ebe0]">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-14">
+        <span class="text-xs uppercase tracking-[0.3em] text-[#c77935] font-semibold">Live Stone Hearth Telemetry</span>
+        <h2 class="font-serif text-3xl sm:text-4xl text-[#140f0c] mt-2">Daily Fresh-Out-of-the-Oven Schedule</h2>
+        <p class="text-xs text-[#6e594d] mt-2">Never settle for stale counter pastries. Track our exact pull times.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Item 1 -->
+        <div class="p-6 rounded-2xl bg-[#fbf8f3] border border-[#f5ebe0] shadow-sm relative">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">In Oven Now</span>
+            <span class="font-mono text-xs text-[#c77935] font-bold">07:30 AM</span>
+          </div>
+          <h4 class="font-serif text-xl font-bold text-[#140f0c] mb-1">Classic Butter Croissant</h4>
+          <p class="text-xs text-[#6e594d] leading-relaxed mb-4">72 distinct layers of Beurre d'Isigny AOC, golden honey comb interior.</p>
+          <div class="text-[11px] font-mono text-[#c77935] font-semibold">Pulling in 12m 40s</div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="p-6 rounded-2xl bg-[#fbf8f3] border border-[#c77935]/40 shadow-md relative">
+          <div class="absolute -top-3 right-4 bg-[#c77935] text-white text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded">
+            Selling Fast
+          </div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">Proofing</span>
+            <span class="font-mono text-xs text-[#c77935] font-bold">08:45 AM</span>
+          </div>
+          <h4 class="font-serif text-xl font-bold text-[#140f0c] mb-1">Cardamom Sugar Buns</h4>
+          <p class="text-xs text-[#6e594d] leading-relaxed mb-4">Crushed green cardamom knots rolled in raw demerara sugar and butter syrup.</p>
+          <div class="text-[11px] font-mono text-[#c77935] font-semibold">Pulling in 42m 15s</div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="p-6 rounded-2xl bg-[#fbf8f3] border border-[#f5ebe0] shadow-sm relative">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-bold">Next Batch</span>
+            <span class="font-mono text-xs text-[#c77935] font-bold">10:00 AM</span>
+          </div>
+          <h4 class="font-serif text-xl font-bold text-[#140f0c] mb-1">Wild Country Sourdough Batard</h4>
+          <p class="text-xs text-[#6e594d] leading-relaxed mb-4">84% hydration wild sourdough, blisters of dark caramel crust, airy crumb.</p>
+          <div class="text-[11px] font-mono text-slate-500 font-semibold">Loading in 1h 20m</div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="p-6 rounded-2xl bg-[#fbf8f3] border border-[#f5ebe0] shadow-sm relative">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-200 text-slate-800 font-bold">Afternoon</span>
+            <span class="font-mono text-xs text-[#c77935] font-bold">12:30 PM</span>
+          </div>
+          <h4 class="font-serif text-xl font-bold text-[#140f0c] mb-1">Valrhona Dark Chocolate Babka</h4>
+          <p class="text-xs text-[#6e594d] leading-relaxed mb-4">Twisted brioche ribbons layered with 70% Guanaja chocolate and sea salt.</p>
+          <div class="text-[11px] font-mono text-slate-500 font-semibold">Scheduled Batch #2</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Pastry Box Builder (Click & Collect) -->
+  <section id="box-builder" class="py-24 px-6 bg-[#fbf8f3]">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-xs uppercase tracking-[0.3em] text-[#c77935] font-semibold">Click & Collect Experience</span>
+        <h2 class="font-serif text-4xl sm:text-5xl text-[#140f0c] mt-2">Build Your Morning Pastry Box</h2>
+        <p class="text-xs text-[#6e594d] max-w-lg mx-auto mt-3">
+          Select items to pack into your custom thermal-lined bakery box. Ready for swift contactless pickup at your preferred morning window.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Item Selector Grid -->
+        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <template x-for="item in menuItems" :key="item.id">
+            <div class="p-5 bg-white rounded-2xl border border-[#f5ebe0] shadow-sm flex flex-col justify-between hover:border-[#c77935]/50 transition">
+              <div>
+                <div class="flex justify-between items-start mb-2">
+                  <h4 class="font-serif text-xl font-bold text-[#140f0c]" x-text="item.name"></h4>
+                  <span class="font-mono text-xs font-bold text-[#c77935]" x-text="'$' + item.price.toFixed(2)"></span>
+                </div>
+                <p class="text-xs text-[#6e594d] mb-4" x-text="item.desc"></p>
+              </div>
+
+              <div class="flex items-center justify-between pt-3 border-t border-[#f5ebe0]">
+                <span class="text-[10px] uppercase font-mono text-slate-400">Box Quantity</span>
+                <div class="flex items-center space-x-2">
+                  <button @click="decrement(item)" class="w-7 h-7 rounded-full bg-[#fbf8f3] border border-[#f5ebe0] text-sm font-bold flex items-center justify-center hover:bg-[#140f0c] hover:text-white transition">-</button>
+                  <span class="w-6 text-center font-mono text-sm font-bold" x-text="item.qty"></span>
+                  <button @click="increment(item)" class="w-7 h-7 rounded-full bg-[#fbf8f3] border border-[#f5ebe0] text-sm font-bold flex items-center justify-center hover:bg-[#140f0c] hover:text-white transition">+</button>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Box Checkout Summary -->
+        <div class="lg:col-span-4 bg-white p-6 sm:p-8 rounded-2xl border border-[#c77935]/40 shadow-xl space-y-6 sticky top-28">
+          <div>
+            <span class="text-[10px] uppercase font-mono tracking-widest text-[#c77935] font-bold">Order Summary</span>
+            <h3 class="font-serif text-2xl text-[#140f0c] mt-1">Artisan Morning Box</h3>
+          </div>
+
+          <!-- Items list in cart -->
+          <div class="divide-y divide-[#f5ebe0] text-xs">
+            <template x-for="item in menuItems.filter(i => i.qty > 0)" :key="item.id">
+              <div class="py-2.5 flex justify-between items-center">
+                <div>
+                  <span class="font-bold text-[#140f0c]" x-text="item.qty + 'x ' + item.name"></span>
+                </div>
+                <span class="font-mono font-bold text-[#c77935]" x-text="'$' + (item.qty * item.price).toFixed(2)"></span>
+              </div>
+            </template>
+            <div x-show="menuItems.filter(i => i.qty > 0).length === 0" class="py-6 text-center text-slate-400 text-xs">
+              No pastries added yet. Select items from the menu to build your morning box.
+            </div>
+          </div>
+
+          <!-- Pickup Time Selector -->
+          <div class="pt-4 border-t border-[#f5ebe0]">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#4a3b32] mb-1.5">Select Pickup Window</label>
+            <select x-model="pickupTime" class="w-full px-3 py-2.5 bg-[#fbf8f3] border border-[#f5ebe0] rounded-lg text-xs font-mono text-[#140f0c] focus:outline-none focus:border-[#c77935]">
+              <option value="07:30 - 08:00 AM">07:30 - 08:00 AM (Fresh Croissant Pull)</option>
+              <option value="08:30 - 09:00 AM">08:30 - 09:00 AM (Cardamom Bun Pull)</option>
+              <option value="09:30 - 10:00 AM">09:30 - 10:00 AM (Country Sourdough Pull)</option>
+              <option value="11:00 - 11:30 AM">11:00 - 11:30 AM (Midday Viennoiserie)</option>
+            </select>
+          </div>
+
+          <!-- Price Calculation -->
+          <div class="pt-4 border-t border-[#f5ebe0] space-y-2 text-xs font-mono">
+            <div class="flex justify-between text-slate-500">
+              <span>Subtotal:</span>
+              <span x-text="'$' + cartTotal()"></span>
+            </div>
+            <div class="flex justify-between text-slate-500">
+              <span>Thermal Bakery Packaging:</span>
+              <span class="text-emerald-600 font-bold">COMPLIMENTARY</span>
+            </div>
+            <div class="flex justify-between text-base font-bold text-[#140f0c] pt-2 border-t border-[#f5ebe0]">
+              <span>Total:</span>
+              <span class="text-[#c77935]" x-text="'$' + cartTotal()"></span>
+            </div>
+          </div>
+
+          <button @click="openCheckoutModal()" :disabled="cartTotal() === '0.00'" class="w-full py-4 bg-[#140f0c] hover:bg-[#c77935] text-white text-xs uppercase tracking-widest font-semibold transition rounded-xl disabled:opacity-40 shadow-lg">
+            Reserve Box for Contactless Pickup &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 px-6 bg-[#140f0c] text-[#f5ebe0] text-center border-t border-[#2d221b]">
+    <div class="max-w-2xl mx-auto space-y-4">
+      <div class="font-serif text-3xl tracking-widest uppercase">Velvet & Crumb</div>
+      <p class="text-xs uppercase tracking-[0.2em] text-[#c77935]">
+        42 Rue des Martyrs, Paris • 182 Mitte, Berlin
+      </p>
+      <div class="pt-6 text-[11px] text-[#a8988e]">
+        Designed & engineered by <a href="https://msnotfound.github.io" class="text-[#d4af37] hover:underline font-mono">Mayank Sahu</a>. Sub-second boutique web systems with custom ordering engines.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function bakeryApp() {
+      return {
+        pickupTime: '08:30 - 09:00 AM',
+        menuItems: [
+          { id: 1, name: 'Beurre d\'Isigny Croissant', price: 4.50, qty: 2, desc: '72 laminated butter layers with crisp honeycomb lattice' },
+          { id: 2, name: 'Cardamom & Sugar Knot', price: 5.25, qty: 1, desc: 'Slow-fermented braided brioche with cracked cardamom' },
+          { id: 3, name: 'Pistachio Pain Suisse', price: 6.00, qty: 1, desc: 'Bronte pistachio crème pâtissière & Valrhona dark pearls' },
+          { id: 4, name: 'Country Sourdough Batard', price: 9.50, qty: 0, desc: '48-hour wild levain with blistered stone-hearth crust' },
+          { id: 5, name: 'Almond & Frangipane Twist', price: 5.75, qty: 0, desc: 'Twice-baked butter croissant soaked in rum simple syrup' },
+          { id: 6, name: 'Nitro Cold Brew Reserve', price: 6.00, qty: 2, desc: 'Single-origin Ethiopian Yirgacheffe steeped 20 hours' }
+        ],
+
+        increment(item) {
+          item.qty++;
+        },
+
+        decrement(item) {
+          if (item.qty > 0) item.qty--;
+        },
+
+        cartTotal() {
+          const total = this.menuItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+          return total.toFixed(2);
+        },
+
+        openCheckoutModal() {
+          alert('Morning Box reserved for ' + this.pickupTime + '! Total: $' + this.cartTotal() + '. (Demo Mode: Contactless pickup ticket generated)');
+        }
+      }
+    }
+  </script>
+</body>
+</html>
