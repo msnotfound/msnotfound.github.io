@@ -9,6 +9,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,19 +48,42 @@
       -webkit-text-fill-color: transparent;
     }
     .wax-seal {
-      box-shadow: 0 4px 20px rgba(176, 138, 66, 0.35);
+      box-shadow: 0 4px 25px rgba(176, 138, 66, 0.4);
     }
     .glass-editorial {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(197, 160, 89, 0.2);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(197, 160, 89, 0.25);
+    }
+    
+    /* 3D Specular Tilt on Cards */
+    .tilt-card {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .tilt-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(197, 160, 89, 0.12), transparent 75%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .tilt-card:hover::after {
+      opacity: 1;
     }
   </style>
 </head>
-<body class="bg-[#faf8f5] text-[#2c2724] font-sans antialiased selection:bg-[#c5a059] selection:text-white" x-data="weddingApp()">
+<body class="bg-[#faf8f5] text-[#2c2724] font-sans antialiased selection:bg-[#c5a059] selection:text-white relative overflow-x-hidden" x-data="weddingApp()">
+
+  <!-- Film Grain Noise Texture Overlay -->
+  <div class="fixed inset-0 pointer-events-none z-50 opacity-[0.03] mix-blend-multiply" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
 
   <!-- Sticky Luxury Banner & Ambient Audio Control -->
-  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" :class="scrolled ? 'bg-[#faf8f5]/95 backdrop-blur-md shadow-sm border-b border-[#ebe1d2]' : 'bg-transparent'">
+  <header class="fixed top-0 left-0 right-0 z-40 transition-all duration-300" :class="scrolled ? 'bg-[#faf8f5]/95 backdrop-blur-md shadow-sm border-b border-[#ebe1d2]' : 'bg-transparent'">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <a href="#" class="font-serif text-2xl tracking-[0.25em] text-[#11100f] uppercase font-light">
         Camille <span class="text-[#c5a059] italic">&</span> Julien
@@ -67,9 +92,8 @@
       <nav class="hidden md:flex items-center space-x-10 text-xs uppercase tracking-[0.2em] font-medium text-[#4a423d]">
         <a href="#ceremony" class="hover:text-[#c5a059] transition">The Gathering</a>
         <a href="#itinerary" class="hover:text-[#c5a059] transition">Itinerary</a>
-        <a href="#travel" class="hover:text-[#c5a059] transition">Estate & Stay</a>
         <a href="#registry" class="hover:text-[#c5a059] transition">Endowment</a>
-        <a href="#gallery" class="hover:text-[#c5a059] transition">Memories</a>
+        <a href="#attire" class="hover:text-[#c5a059] transition">Attire Palette</a>
       </nav>
 
       <div class="flex items-center space-x-4">
@@ -91,15 +115,17 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero Section with Tuscan Golden Dust Canvas -->
   <section class="relative min-h-screen flex items-center justify-center pt-20 px-6 overflow-hidden">
-    <!-- Hero Background Image with Editorial Vignette -->
     <div class="absolute inset-0 z-0">
       <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85" alt="Tuscany Villa" class="w-full h-full object-cover brightness-[0.92] contrast-[0.95]">
       <div class="absolute inset-0 bg-gradient-to-b from-[#faf8f5]/40 via-transparent to-[#faf8f5]"></div>
     </div>
 
-    <div class="relative z-10 max-w-4xl mx-auto text-center py-24">
+    <!-- Golden Dust Particle Canvas -->
+    <canvas id="gold-dust-canvas" class="absolute inset-0 pointer-events-none z-10"></canvas>
+
+    <div class="relative z-20 max-w-4xl mx-auto text-center py-24">
       <p class="font-serif text-sm sm:text-base uppercase tracking-[0.4em] text-[#3a2b10] mb-6 font-semibold">
         Together with their families
       </p>
@@ -125,19 +151,19 @@
 
       <!-- Live Countdown Engine -->
       <div class="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto mb-12">
-        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+        <div class="bg-white/85 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
           <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.days">00</span>
           <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Days</span>
         </div>
-        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+        <div class="bg-white/85 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
           <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.hours">00</span>
           <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Hours</span>
         </div>
-        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+        <div class="bg-white/85 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
           <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.minutes">00</span>
           <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Minutes</span>
         </div>
-        <div class="bg-white/80 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
+        <div class="bg-white/85 backdrop-blur-md p-4 rounded-xl border border-[#ebe1d2] shadow-sm">
           <span class="block font-serif text-2xl sm:text-3xl text-[#11100f]" x-text="countdown.seconds">00</span>
           <span class="text-[9px] uppercase tracking-widest text-[#8e6c30]">Seconds</span>
         </div>
@@ -151,20 +177,20 @@
     </div>
   </section>
 
-  <!-- Editorial Quote & Narrative -->
-  <section class="py-24 px-6 border-t border-[#ebe1d2] bg-white">
+  <!-- Editorial Narrative -->
+  <section id="ceremony" class="py-24 px-6 border-t border-[#ebe1d2] bg-white">
     <div class="max-w-3xl mx-auto text-center">
       <span class="text-[#c5a059] text-4xl font-serif">❦</span>
       <h2 class="font-serif text-3xl sm:text-4xl text-[#11100f] italic font-light leading-relaxed my-6">
         "We have found the one whom our soul loves, under ancient cypress trees and open Italian skies."
       </h2>
       <p class="text-sm font-sans text-[#635b54] leading-relaxed max-w-xl mx-auto tracking-wide">
-        After seven years of wanderlust, shared quiet mornings, and adventures across four continents, we invite our closest inner circle to join us for an unforgettable three-day weekend celebration in the Tuscan countryside.
+        After seven years of wanderlust, shared quiet mornings, and adventures across four continents, we invite our closest inner circle to join us for an unforgettable three-day celebration in the Tuscan countryside.
       </p>
     </div>
   </section>
 
-  <!-- Interactive Itinerary Section -->
+  <!-- Interactive Itinerary Section with 3D Specular Tilt -->
   <section id="itinerary" class="py-24 px-6 bg-[#faf8f5] border-t border-[#ebe1d2]">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
@@ -188,7 +214,7 @@
 
       <!-- Day 1 Timeline -->
       <div x-show="activeDay === 1" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="max-w-3xl mx-auto space-y-8">
-        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 tilt-card">
           <div class="space-y-1">
             <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">17:00 • The Welcome Terrace</span>
             <h3 class="font-serif text-2xl text-[#11100f]">Aperitivo al Tramonto</h3>
@@ -199,7 +225,7 @@
           </div>
         </div>
 
-        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 tilt-card">
           <div class="space-y-1">
             <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">20:00 • The Lemon Grove Garden</span>
             <h3 class="font-serif text-2xl text-[#11100f]">Welcome Wood-Fired Pizza Feast</h3>
@@ -213,7 +239,7 @@
 
       <!-- Day 2 Timeline -->
       <div x-show="activeDay === 2" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="max-w-3xl mx-auto space-y-8">
-        <div class="p-8 bg-white rounded-2xl border border-[#c5a059]/40 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="p-8 bg-white rounded-2xl border border-[#c5a059]/40 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6 tilt-card">
           <div class="space-y-1">
             <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase font-semibold">16:30 • The Cypress Aisle</span>
             <h3 class="font-serif text-2xl text-[#11100f]">The Sacred Matrimonial Vows</h3>
@@ -224,7 +250,7 @@
           </div>
         </div>
 
-        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 tilt-card">
           <div class="space-y-1">
             <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">18:00 • The Belvedere Court</span>
             <h3 class="font-serif text-2xl text-[#11100f]">Champagne & Canapés Reception</h3>
@@ -235,7 +261,7 @@
           </div>
         </div>
 
-        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 tilt-card">
           <div class="space-y-1">
             <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">20:30 • The Grand Courtyard</span>
             <h3 class="font-serif text-2xl text-[#11100f]">Four-Course Candlelit Banqueting & Dancing</h3>
@@ -249,7 +275,7 @@
 
       <!-- Day 3 Timeline -->
       <div x-show="activeDay === 3" x-transition:enter="transition ease-out duration-300 transform opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="max-w-3xl mx-auto space-y-8">
-        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="p-8 bg-white rounded-2xl border border-[#ebe1d2] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 tilt-card">
           <div class="space-y-1">
             <span class="text-xs font-serif text-[#c5a059] tracking-widest uppercase">11:30 • The Olive Grove Poolside</span>
             <h3 class="font-serif text-2xl text-[#11100f]">Post-Wedding Recovery Brunch & Bloody Marys</h3>
@@ -263,8 +289,8 @@
     </div>
   </section>
 
-  <!-- Interactive Dress Code & Palette Guide -->
-  <section class="py-20 px-6 bg-white border-t border-[#ebe1d2]">
+  <!-- Attire Palette Guide -->
+  <section id="attire" class="py-20 px-6 bg-white border-t border-[#ebe1d2]">
     <div class="max-w-4xl mx-auto text-center">
       <span class="text-xs uppercase tracking-[0.3em] text-[#8e6c30] font-semibold">Attire Inspiration</span>
       <h2 class="font-serif text-3xl sm:text-4xl text-[#11100f] mt-2 mb-4">Sartorial Guidance & Color Story</h2>
@@ -273,27 +299,27 @@
       </p>
 
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2] tilt-card">
           <div class="w-full h-16 rounded-lg bg-[#27372c] mb-3 shadow-inner"></div>
           <span class="block text-xs font-serif text-[#11100f] font-semibold">Tuscan Cypress</span>
           <span class="text-[10px] font-mono text-slate-400">#27372C</span>
         </div>
-        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2] tilt-card">
           <div class="w-full h-16 rounded-lg bg-[#44352a] mb-3 shadow-inner"></div>
           <span class="block text-xs font-serif text-[#11100f] font-semibold">Aged Terracotta</span>
           <span class="text-[10px] font-mono text-slate-400">#44352A</span>
         </div>
-        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2] tilt-card">
           <div class="w-full h-16 rounded-lg bg-[#c5a059] mb-3 shadow-inner"></div>
           <span class="block text-xs font-serif text-[#11100f] font-semibold">Sienna Ochre</span>
           <span class="text-[10px] font-mono text-slate-400">#C5A059</span>
         </div>
-        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2] tilt-card">
           <div class="w-full h-16 rounded-lg bg-[#2b3543] mb-3 shadow-inner"></div>
           <span class="block text-xs font-serif text-[#11100f] font-semibold">Midnight Twilight</span>
           <span class="text-[10px] font-mono text-slate-400">#2B3543</span>
         </div>
-        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2]">
+        <div class="p-4 bg-[#faf8f5] rounded-xl border border-[#ebe1d2] tilt-card">
           <div class="w-full h-16 rounded-lg bg-[#e8decb] mb-3 shadow-inner"></div>
           <span class="block text-xs font-serif text-[#11100f] font-semibold">Travertine Gold</span>
           <span class="text-[10px] font-mono text-slate-400">#E8DECB</span>
@@ -302,7 +328,7 @@
     </div>
   </section>
 
-  <!-- Interactive Gift Registry & Honeymoon Endowment -->
+  <!-- Interactive Gift Registry & Honeymoon Endowment with 3D Tilt -->
   <section id="registry" class="py-24 px-6 bg-[#faf8f5] border-t border-[#ebe1d2]">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16">
@@ -315,7 +341,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Fund 1 -->
-        <div class="bg-white rounded-2xl p-8 border border-[#ebe1d2] shadow-sm flex flex-col justify-between">
+        <div class="bg-white rounded-2xl p-8 border border-[#ebe1d2] shadow-sm flex flex-col justify-between tilt-card">
           <div>
             <div class="w-12 h-12 rounded-xl bg-[#faf8f5] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] mb-6">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
@@ -338,7 +364,7 @@
         </div>
 
         <!-- Fund 2 -->
-        <div class="bg-white rounded-2xl p-8 border border-[#c5a059]/40 shadow-md flex flex-col justify-between relative overflow-hidden">
+        <div class="bg-white rounded-2xl p-8 border border-[#c5a059]/40 shadow-md flex flex-col justify-between relative overflow-hidden tilt-card">
           <div class="absolute top-0 right-0 bg-[#c5a059] text-white text-[9px] uppercase tracking-widest px-3 py-1 rounded-bl">
             Most Popular
           </div>
@@ -364,7 +390,7 @@
         </div>
 
         <!-- Fund 3 -->
-        <div class="bg-white rounded-2xl p-8 border border-[#ebe1d2] shadow-sm flex flex-col justify-between">
+        <div class="bg-white rounded-2xl p-8 border border-[#ebe1d2] shadow-sm flex flex-col justify-between tilt-card">
           <div>
             <div class="w-12 h-12 rounded-xl bg-[#faf8f5] border border-[#c5a059]/30 flex items-center justify-center text-[#c5a059] mb-6">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
@@ -390,13 +416,13 @@
   </section>
 
   <!-- Interactive RSVP Modal -->
-  <div x-show="openRsvp" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition:enter="transition ease-out duration-300 opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200 opacity-100" x-transition:leave-end="opacity-0">
+  <div x-show="openRsvp" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-md" x-transition:enter="transition ease-out duration-300 opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200 opacity-100" x-transition:leave-end="opacity-0">
     <div class="bg-[#faf8f5] w-full max-w-xl rounded-2xl shadow-2xl border border-[#ebe1d2] p-8 sm:p-10 relative overflow-hidden" @click.away="openRsvp = false">
       <button @click="openRsvp = false" class="absolute top-6 right-6 text-slate-400 hover:text-slate-800 text-lg">✕</button>
 
-      <!-- Confirmation Screen -->
+      <!-- Confirmation Screen with Animated Wax Seal -->
       <div x-show="rsvpSubmitted" class="text-center py-10 space-y-4">
-        <div class="w-20 h-20 mx-auto rounded-full bg-[#c5a059] text-white flex items-center justify-center text-3xl shadow-xl wax-seal font-serif">
+        <div class="w-20 h-20 mx-auto rounded-full bg-[#c5a059] text-white flex items-center justify-center text-3xl shadow-xl wax-seal font-serif animate-bounce">
           C❦J
         </div>
         <h3 class="font-serif text-3xl text-[#11100f]">Your Presence Is Sealed</h3>
@@ -463,7 +489,7 @@
   </div>
 
   <!-- Interactive Contribution Modal -->
-  <div x-show="openContribution" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+  <div x-show="openContribution" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
     <div class="bg-[#faf8f5] w-full max-w-md rounded-2xl shadow-2xl border border-[#ebe1d2] p-8 relative" @click.away="openContribution = false">
       <button @click="openContribution = false" class="absolute top-6 right-6 text-slate-400 hover:text-slate-800 text-lg">✕</button>
       <div class="text-center mb-6">
@@ -506,7 +532,86 @@
     </div>
   </footer>
 
+  <!-- Lenis + Golden Dust Canvas + 3D Tilt Scripts -->
   <script>
+    // Lenis Smooth Scroll
+    const lenis = new Lenis({
+      duration: 1.25,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      smoothWheel: true,
+    });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // 3D Specular Tilt on Itinerary / Cards
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -4;
+        const rotateY = ((x - centerX) / centerX) * 4;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+
+    // Golden Floating Dust Canvas in Hero
+    (function initGoldDust() {
+      const canvas = document.getElementById('gold-dust-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = canvas.parentElement.offsetHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const specks = [];
+      const count = width < 768 ? 25 : 55;
+      for (let i = 0; i < count; i++) {
+        specks.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: -Math.random() * 0.35 - 0.1,
+          radius: Math.random() * 2 + 0.6,
+          opacity: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        for (let s of specks) {
+          s.x += s.vx;
+          s.y += s.vy;
+          if (s.y < 0) s.y = height;
+          if (s.x < 0) s.x = width;
+          if (s.x > width) s.x = 0;
+
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(197, 160, 89, ${s.opacity})`;
+          ctx.fill();
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
     function weddingApp() {
       return {
         scrolled: false,

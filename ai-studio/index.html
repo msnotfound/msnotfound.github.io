@@ -9,6 +9,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,9 +53,32 @@
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
+    
+    /* 3D Specular Tilt on Cards */
+    .tilt-card {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .tilt-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.15), transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .tilt-card:hover::after {
+      opacity: 1;
+    }
   </style>
 </head>
-<body class="bg-cyber-950 text-slate-100 font-sans antialiased selection:bg-cyan-500 selection:text-black" x-data="syntraApp()">
+<body class="bg-cyber-950 text-slate-100 font-sans antialiased selection:bg-cyan-500 selection:text-black relative overflow-x-hidden" x-data="syntraApp()">
+
+  <!-- Film Grain Noise Texture Overlay -->
+  <div class="fixed inset-0 pointer-events-none z-50 opacity-[0.035] mix-blend-screen" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
 
   <!-- Live Telemetry Status Bar -->
   <div class="bg-cyber-900 border-b border-cyber-800 text-[11px] font-mono py-1.5 px-4 text-slate-400">
@@ -108,6 +133,7 @@
 
   <!-- Hero Section -->
   <section class="relative py-24 px-6 overflow-hidden matrix-grid border-b border-cyber-800">
+    <canvas id="neuralCanvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-40 z-0"></canvas>
     <div class="max-w-5xl mx-auto text-center relative z-10">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyber-900 border border-cyan-500/30 text-cyan-400 text-xs font-mono mb-8">
         <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
@@ -133,22 +159,22 @@
 
       <!-- Live Pipeline Telemetry Badges -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 text-left">
-        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800">
+        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800 tilt-card">
           <span class="text-slate-500 text-[10px] font-mono block uppercase">Average Latency</span>
           <span class="text-2xl font-mono font-bold text-white">142<span class="text-cyan-400 text-sm">ms</span></span>
           <span class="text-[11px] text-emerald-400 block font-mono mt-1">4.2x Faster than Make.com</span>
         </div>
-        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800">
+        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800 tilt-card">
           <span class="text-slate-500 text-[10px] font-mono block uppercase">Error Recovery</span>
           <span class="text-2xl font-mono font-bold text-white">100<span class="text-cyan-400 text-sm">%</span></span>
           <span class="text-[11px] text-emerald-400 block font-mono mt-1">Automatic Dead-Letter Retries</span>
         </div>
-        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800">
+        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800 tilt-card">
           <span class="text-slate-500 text-[10px] font-mono block uppercase">Infrastructure</span>
           <span class="text-2xl font-mono font-bold text-white">Python<span class="text-cyan-400 text-sm">/FastAPI</span></span>
           <span class="text-[11px] text-slate-400 block font-mono mt-1">Asynchronous Redis Queues</span>
         </div>
-        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800">
+        <div class="p-4 bg-cyber-900/80 rounded-xl border border-cyber-800 tilt-card">
           <span class="text-slate-500 text-[10px] font-mono block uppercase">Escrow Milestone</span>
           <span class="text-2xl font-mono font-bold text-white">50/50</span>
           <span class="text-[11px] text-cyan-400 block font-mono mt-1">Pay on Verified Execution</span>
@@ -446,6 +472,136 @@
   </footer>
 
   <script>
+    // Initialize Lenis Smooth Scroll
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true
+    });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // 3D Specular Tilt Engine
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -6;
+        const rotateY = ((x - centerX) / centerX) * 6;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+        card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+        card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+      });
+    });
+
+    // 60FPS Interactive Neural Network Canvas
+    (function initNeuralCanvas() {
+      const canvas = document.getElementById('neuralCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let mouse = { x: null, y: null, radius: 140 };
+
+      function resize() {
+        width = canvas.width = canvas.offsetWidth;
+        height = canvas.height = canvas.offsetHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      window.addEventListener('mousemove', e => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+
+      window.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+
+      const nodeCount = Math.min(45, Math.floor(window.innerWidth / 28));
+      const nodes = [];
+      for (let i = 0; i < nodeCount; i++) {
+        nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: (Math.random() - 0.5) * 0.8,
+          radius: Math.random() * 2 + 1.5,
+          color: Math.random() > 0.4 ? 'rgba(6, 182, 212,' : 'rgba(139, 92, 246,'
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connections
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const dx = nodes[i].x - nodes[j].x;
+            const dy = nodes[i].y - nodes[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 120) {
+              const alpha = (1 - dist / 120) * 0.35;
+              ctx.strokeStyle = `rgba(6, 182, 212, ${alpha})`;
+              ctx.lineWidth = 0.8;
+              ctx.beginPath();
+              ctx.moveTo(nodes[i].x, nodes[i].y);
+              ctx.lineTo(nodes[j].x, nodes[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Update and draw nodes
+        for (let n of nodes) {
+          n.x += n.vx;
+          n.y += n.vy;
+
+          if (n.x < 0 || n.x > width) n.vx *= -1;
+          if (n.y < 0 || n.y > height) n.vy *= -1;
+
+          // Mouse reactivity
+          if (mouse.x !== null && mouse.y !== null) {
+            const dx = n.x - mouse.x;
+            const dy = n.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+              const force = (mouse.radius - dist) / mouse.radius;
+              n.x += (dx / dist) * force * 1.5;
+              n.y += (dy / dist) * force * 1.5;
+            }
+          }
+
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+          ctx.fillStyle = n.color + ' 0.85)';
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#06b6d4';
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
     function syntraApp() {
       return {
         activeStage: 1,

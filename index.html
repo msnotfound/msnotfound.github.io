@@ -3,13 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mayank Sahu | Full-Stack Systems & High-Converting Web Platforms</title>
+  <title>Mayank Sahu | Full-Stack Systems & Creative Engineering Studio</title>
   <meta name="description" content="Engineering bespoke, sub-second web platforms, luxury brand experiences, and autonomous AI automation pipelines. 48-hour turnarounds.">
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -35,40 +40,78 @@
   </script>
   <style>
     [x-cloak] { display: none !important; }
+    
+    /* Smooth Canvas & Glass */
     .glass-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(16px);
+      background: rgba(13, 17, 28, 0.72);
+      backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
+    
     .glow-accent {
-      box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.25);
+      box-shadow: 0 0 60px -10px rgba(99, 102, 241, 0.28);
+    }
+
+    /* 3D Specular Tilt Card */
+    .tilt-card {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .tilt-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99, 102, 241, 0.15), transparent 80%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .tilt-card:hover::after {
+      opacity: 1;
+    }
+    
+    /* Gradient Shimmer Border */
+    .shimmer-badge {
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.15));
+      background-size: 200% 100%;
+      animation: shimmer 4s infinite linear;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white" x-data="portfolioApp()">
+<body class="bg-[#05070c] text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden" x-data="portfolioApp()">
+
+  <!-- Film Grain Noise Texture Overlay -->
+  <div class="fixed inset-0 pointer-events-none z-50 opacity-[0.035] mix-blend-overlay" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
 
   <!-- Top Announcement -->
-  <div class="bg-indigo-950/80 border-b border-indigo-900/50 text-indigo-300 text-xs py-2 px-4 text-center font-medium">
+  <div class="bg-indigo-950/70 border-b border-indigo-900/40 text-indigo-300 text-xs py-2 px-4 text-center font-medium backdrop-blur-md">
     <div class="max-w-7xl mx-auto flex items-center justify-center space-x-2">
       <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span>Available for Select Web & Automation Contracts • Guaranteed 48-Hour Turnaround • 50/50 Escrow</span>
+      <span>Available for Select Web & Automation Contracts • Guaranteed 48-Hour Turnaround • 50/50 Escrow Terms</span>
     </div>
   </div>
 
   <!-- Navigation -->
-  <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+  <header class="sticky top-0 z-40 bg-[#05070c]/80 backdrop-blur-xl border-b border-slate-800/60">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       <a href="#" class="flex items-center space-x-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-105 transition-transform">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
           M
         </div>
         <div>
           <span class="font-bold text-lg tracking-tight text-white group-hover:text-indigo-400 transition">Mayank Sahu</span>
-          <span class="text-[10px] block uppercase tracking-widest font-mono text-slate-400">Systems & Web Engineering</span>
+          <span class="text-[10px] block uppercase tracking-widest font-mono text-slate-400">Creative & Systems Studio</span>
         </div>
       </a>
 
-      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+      <nav class="hidden md:flex items-center space-x-8 text-xs font-mono uppercase tracking-wider text-slate-300">
         <a href="#work" class="hover:text-white transition">Live Flagship Demos</a>
         <a href="#services" class="hover:text-white transition">Capabilities</a>
         <a href="#calculator" class="hover:text-white transition">Instant Quote</a>
@@ -76,42 +119,47 @@
       </nav>
 
       <div class="flex items-center space-x-3">
-        <a href="https://github.com/msnotfound" target="_blank" class="text-slate-400 hover:text-white text-xs font-mono px-3 py-2 border border-slate-800 rounded-lg hover:border-slate-700 transition">
+        <a href="https://github.com/msnotfound" target="_blank" class="text-slate-400 hover:text-white text-xs font-mono px-3.5 py-2 border border-slate-800/80 rounded-lg hover:border-slate-700 transition">
           GitHub
         </a>
-        <a href="#contact" class="px-5 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-lg shadow-indigo-600/20 transition">
+        <a href="#contact" class="px-5 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
           Book Project
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:28px_28px]"></div>
+  <!-- Hero Section with Interactive Particle Canvas -->
+  <section class="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <!-- Interactive Ambient Particle Canvas -->
+    <canvas id="ambient-canvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
+    
+    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none"></div>
+    
     <div class="max-w-4xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-indigo-400 text-xs font-mono font-medium mb-8">
-        <span>⚡</span> High-Performance Web • Next.js • Python • Custom Automations
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full shimmer-badge border border-indigo-500/30 text-indigo-300 text-xs font-mono font-medium mb-8">
+        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+        <span>Creative Frontend • WebGL / Alpine • Python • 48h Turnarounds</span>
       </div>
-      <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.15] mb-6">
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6 font-display">
         I engineer websites that convert and automations that save 20+ hours a week.
       </h1>
-      <p class="text-slate-400 text-lg sm:text-xl font-normal max-w-2xl mx-auto mb-10 leading-relaxed">
+      <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
         Stop settling for bloated cookie-cutter templates or fragile no-code toys. I craft custom, sub-second web platforms with clean architecture, verified milestone delivery, and rapid turnarounds.
       </p>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#work" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-xl shadow-xl shadow-indigo-600/30 transition flex items-center justify-center gap-2">
+        <a href="#work" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs uppercase tracking-wider rounded-xl shadow-xl shadow-indigo-600/30 transition flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
           <span>Explore Live Interactive Demos</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </a>
-        <a href="#calculator" class="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 font-semibold text-sm rounded-xl transition flex items-center justify-center gap-2">
+        <a href="#calculator" class="w-full sm:w-auto px-8 py-4 bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-800 font-semibold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2">
           <span>Calculate Project Cost</span>
         </a>
       </div>
 
       <!-- Trust Specs -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-12 border-t border-slate-900 text-left">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-12 border-t border-slate-900 text-left">
         <div>
           <span class="block text-2xl font-extrabold text-white font-mono">100/100</span>
           <span class="text-xs text-slate-500 font-medium">Lighthouse Performance</span>
@@ -132,15 +180,15 @@
     </div>
   </section>
 
-  <!-- Live Selected Work -->
-  <section id="work" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-900 bg-slate-950/50">
+  <!-- Live Selected Work with 3D Tilt Cards -->
+  <section id="work" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900 bg-[#05070c]/50">
     <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
         <div>
-          <div class="text-xs font-mono font-semibold uppercase tracking-wider text-indigo-400 mb-2">Live Proof of Work</div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Flagship Deployed Web Systems</h2>
+          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-indigo-400 mb-2">Live Proof of Work</div>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display">Flagship Deployed Web Systems</h2>
         </div>
-        <p class="text-slate-400 text-sm mt-2 md:mt-0 max-w-md">
+        <p class="text-slate-400 text-sm mt-3 md:mt-0 max-w-md leading-relaxed">
           Explore full-scale live interactive platforms built to demonstrate industry-grade craft, reactive UI state, and rapid speed.
         </p>
       </div>
@@ -148,9 +196,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         
         <!-- Project 1: Real Estate -->
-        <div class="glass-card rounded-2xl overflow-hidden group hover:border-slate-700 transition flex flex-col justify-between">
+        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
           <div>
-            <div class="relative h-56 overflow-hidden bg-slate-900">
+            <div class="relative h-60 overflow-hidden bg-slate-900">
               <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" alt="Real Estate" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
               <div class="absolute top-4 left-4">
                 <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-indigo-600/90 text-white backdrop-blur-md">Live Demo</span>
@@ -161,19 +209,19 @@
             </div>
             <div class="p-6">
               <div class="text-[11px] font-mono text-indigo-400 uppercase tracking-wider mb-1">Real Estate & Brokerages</div>
-              <h3 class="text-xl font-bold text-white mb-2">AURA | Architectural Estates</h3>
+              <h3 class="text-xl font-bold text-white mb-2 font-display">AURA | Architectural Estates</h3>
               <p class="text-xs text-slate-400 leading-relaxed mb-4">
                 Luxury MLS property showcase with reactive mortgage calculator sliders, dynamic filters, interactive 3D floor plans, and VIP chauffeur tour booking modal.
               </p>
               <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Alpine.js State</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Tailwind Glass</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Mortgage Engine</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Alpine.js State</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Tailwind Glass</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Mortgage Engine</span>
               </div>
             </div>
           </div>
           <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/real-estate-demo/" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-indigo-600 hover:text-white border border-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <a href="https://msnotfound.github.io/real-estate-demo/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-indigo-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
               <span>View Live Website</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
@@ -181,9 +229,9 @@
         </div>
 
         <!-- Project 2: Luxury Wedding & Event -->
-        <div class="glass-card rounded-2xl overflow-hidden group hover:border-slate-700 transition flex flex-col justify-between">
+        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
           <div>
-            <div class="relative h-56 overflow-hidden bg-slate-900">
+            <div class="relative h-60 overflow-hidden bg-slate-900">
               <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Luxury Wedding" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
               <div class="absolute top-4 left-4">
                 <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-amber-600/90 text-white backdrop-blur-md">Live Demo</span>
@@ -194,19 +242,19 @@
             </div>
             <div class="p-6">
               <div class="text-[11px] font-mono text-amber-400 uppercase tracking-wider mb-1">Bespoke Events & Celebrations</div>
-              <h3 class="text-xl font-bold text-white mb-2">L'ÉTERNEL | Private Soirée</h3>
+              <h3 class="text-xl font-bold text-white mb-2 font-display">L'ÉTERNEL | Private Soirée</h3>
               <p class="text-xs text-slate-400 leading-relaxed mb-4">
                 Haute couture Tuscan estate celebration site featuring live countdown engine, interactive guest RSVP modal with wax seal stamp, 3-day itinerary, and gift endowment registry.
               </p>
               <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">RSVP Engine</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Countdown Timer</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Endowment Fund</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">RSVP Engine</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Countdown Timer</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Endowment Fund</span>
               </div>
             </div>
           </div>
           <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/wedding/" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-amber-600 hover:text-white border border-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <a href="https://msnotfound.github.io/wedding/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-amber-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
               <span>View Live Website</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
@@ -214,10 +262,10 @@
         </div>
 
         <!-- Project 3: AI Systems & Automations -->
-        <div class="glass-card rounded-2xl overflow-hidden group hover:border-slate-700 transition flex flex-col justify-between">
+        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
           <div>
-            <div class="relative h-56 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-cyan-950/40 to-slate-900">
-              <div class="w-full bg-slate-950 p-4 rounded-xl border border-cyan-500/30 font-mono text-[11px] text-slate-300 space-y-1.5">
+            <div class="relative h-60 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-cyan-950/40 to-slate-900">
+              <div class="w-full bg-slate-950/90 p-4 rounded-xl border border-cyan-500/30 font-mono text-[11px] text-slate-300 space-y-1.5">
                 <div class="flex items-center justify-between text-cyan-400 font-bold">
                   <span>[INBOUND_WEBHOOK]</span>
                   <span class="text-emerald-400">142ms</span>
@@ -232,19 +280,19 @@
             </div>
             <div class="p-6">
               <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-wider mb-1">AI & Workflow Infrastructure</div>
-              <h3 class="text-xl font-bold text-white mb-2">SYNTRA | Autonomous Systems</h3>
+              <h3 class="text-xl font-bold text-white mb-2 font-display">SYNTRA | Autonomous Systems</h3>
               <p class="text-xs text-slate-400 leading-relaxed mb-4">
                 Production-grade automation platform featuring live 4-stage pipeline execution simulator, real-time ROI labor savings calculator, and LLM latency benchmark matrix.
               </p>
               <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Live Simulator</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">ROI Calculator</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Model Matrix</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Live Simulator</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">ROI Calculator</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Model Matrix</span>
               </div>
             </div>
           </div>
           <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/ai-studio/" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-cyan-600 hover:text-white border border-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <a href="https://msnotfound.github.io/ai-studio/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-cyan-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
               <span>View Live Website</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
@@ -252,9 +300,9 @@
         </div>
 
         <!-- Project 4: Modern Bakery & E-Commerce -->
-        <div class="glass-card rounded-2xl overflow-hidden group hover:border-slate-700 transition flex flex-col justify-between">
+        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
           <div>
-            <div class="relative h-56 overflow-hidden bg-slate-900">
+            <div class="relative h-60 overflow-hidden bg-slate-900">
               <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80" alt="Bakery & Cafe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
               <div class="absolute top-4 left-4">
                 <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-orange-600/90 text-white backdrop-blur-md">Live Demo</span>
@@ -265,19 +313,19 @@
             </div>
             <div class="p-6">
               <div class="text-[11px] font-mono text-orange-400 uppercase tracking-wider mb-1">Artisanal Food & Hospitality</div>
-              <h3 class="text-xl font-bold text-white mb-2">VELVET & CRUMB | Viennoiserie</h3>
+              <h3 class="text-xl font-bold text-white mb-2 font-display">VELVET & CRUMB | Viennoiserie</h3>
               <p class="text-xs text-slate-400 leading-relaxed mb-4">
                 Parisian/Nordic bakery platform with live stone-hearth oven pull clock, interactive Click-and-Collect Morning Box builder, and pickup window scheduler.
               </p>
               <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Live Oven Clock</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Box Builder</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Pickup Engine</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Live Oven Clock</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Box Builder</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Pickup Engine</span>
               </div>
             </div>
           </div>
           <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/bakery/" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-orange-600 hover:text-white border border-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <a href="https://msnotfound.github.io/bakery/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-orange-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
               <span>View Live Website</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
@@ -285,9 +333,9 @@
         </div>
 
         <!-- Project 5: Full-Stack SaaS (DocMagic) -->
-        <div class="glass-card rounded-2xl overflow-hidden group hover:border-slate-700 transition flex flex-col justify-between">
+        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
           <div>
-            <div class="relative h-56 overflow-hidden bg-slate-900">
+            <div class="relative h-60 overflow-hidden bg-slate-900">
               <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="DocMagic SaaS" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
               <div class="absolute top-4 left-4">
                 <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-emerald-600/90 text-white backdrop-blur-md">Production SaaS</span>
@@ -298,19 +346,19 @@
             </div>
             <div class="p-6">
               <div class="text-[11px] font-mono text-emerald-400 uppercase tracking-wider mb-1">Full-Stack SaaS Platform</div>
-              <h3 class="text-xl font-bold text-white mb-2">DocMagic AI Document Engine</h3>
+              <h3 class="text-xl font-bold text-white mb-2 font-display">DocMagic AI Document Engine</h3>
               <p class="text-xs text-slate-400 leading-relaxed mb-4">
                 Production-grade SaaS for parsing, summarizing, and transforming unstructured documents with sub-second API pipelines and interactive editor.
               </p>
               <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Next.js</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">FastAPI</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Vercel Deploy</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Next.js</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">FastAPI</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Vercel Deploy</span>
               </div>
             </div>
           </div>
           <div class="px-6 pb-6 pt-0">
-            <a href="https://docmagicmaya.vercel.app/" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-emerald-600 hover:text-white border border-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <a href="https://docmagicmaya.vercel.app/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-emerald-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
               <span>View Live App</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
@@ -318,10 +366,10 @@
         </div>
 
         <!-- Project 6: Systems Engineering Proof of Work -->
-        <div class="glass-card rounded-2xl overflow-hidden group hover:border-slate-700 transition flex flex-col justify-between">
+        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
           <div>
-            <div class="relative h-56 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-indigo-950 to-slate-900">
-              <div class="w-full bg-slate-950 p-4 rounded-xl border border-indigo-500/30 font-mono text-[11px] text-slate-300 space-y-1.5">
+            <div class="relative h-60 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-indigo-950 to-slate-900">
+              <div class="w-full bg-slate-950/90 p-4 rounded-xl border border-indigo-500/30 font-mono text-[11px] text-slate-300 space-y-1.5">
                 <div class="text-indigo-400 font-bold">msnotfound/mnemium</div>
                 <div class="text-slate-400">• SQLite-WASM + sqlite-vec engine</div>
                 <div class="text-slate-400">• In-browser vector memory store</div>
@@ -333,19 +381,19 @@
             </div>
             <div class="p-6">
               <div class="text-[11px] font-mono text-indigo-400 uppercase tracking-wider mb-1">Systems & Edge Infrastructure</div>
-              <h3 class="text-xl font-bold text-white mb-2">Fleetorch & Mnemium Systems</h3>
+              <h3 class="text-xl font-bold text-white mb-2 font-display">Fleetorch & Mnemium Systems</h3>
               <p class="text-xs text-slate-400 leading-relaxed mb-4">
                 High-performance edge systems: Fleetorch (Cloud container supervisor with terminal multiplexing) and Mnemium (In-browser WASM Vector DB).
               </p>
               <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">WASM / C</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Python Containers</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 border border-slate-800 text-slate-300">Distributed Infra</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">WASM / C</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Python Containers</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Distributed Infra</span>
               </div>
             </div>
           </div>
           <div class="px-6 pb-6 pt-0">
-            <a href="https://github.com/msnotfound" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-indigo-600 hover:text-white border border-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <a href="https://github.com/msnotfound" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-indigo-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
               <span>View GitHub Codebase</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
@@ -357,11 +405,11 @@
   </section>
 
   <!-- Interactive Project Pricing Calculator -->
-  <section id="calculator" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-900">
-    <div class="max-w-4xl mx-auto glass-card rounded-3xl p-8 sm:p-12 glow-accent">
+  <section id="calculator" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900">
+    <div class="max-w-4xl mx-auto glass-card rounded-3xl p-8 sm:p-12 glow-accent border border-indigo-500/20">
       <div class="text-center max-w-xl mx-auto mb-10">
-        <span class="text-indigo-400 text-xs font-mono font-bold uppercase tracking-wider">Instant Estimator</span>
-        <h2 class="text-3xl font-extrabold text-white mt-2 mb-3">Calculate Your Project Cost & Timeline</h2>
+        <span class="text-indigo-400 text-xs font-mono font-bold uppercase tracking-widest">Instant Estimator</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-3 font-display">Calculate Your Project Cost & Timeline</h2>
         <p class="text-slate-400 text-xs sm:text-sm">Select your scope below for transparent milestone-based pricing with zero hidden fees.</p>
       </div>
 
@@ -464,11 +512,11 @@
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16">
         <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Risk-Free Process</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Zero Client Risk Milestone Guarantee</h2>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 font-display">Zero Client Risk Milestone Guarantee</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass-card p-6 rounded-2xl border border-slate-800">
+        <div class="glass-card p-6 rounded-2xl border border-slate-800 tilt-card">
           <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-mono font-bold text-lg mb-4">
             01
           </div>
@@ -478,7 +526,7 @@
           </p>
         </div>
 
-        <div class="glass-card p-6 rounded-2xl border border-slate-800">
+        <div class="glass-card p-6 rounded-2xl border border-slate-800 tilt-card">
           <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-mono font-bold text-lg mb-4">
             02
           </div>
@@ -488,7 +536,7 @@
           </p>
         </div>
 
-        <div class="glass-card p-6 rounded-2xl border border-slate-800">
+        <div class="glass-card p-6 rounded-2xl border border-slate-800 tilt-card">
           <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-mono font-bold text-lg mb-4">
             03
           </div>
@@ -502,10 +550,10 @@
   </section>
 
   <!-- Contact & Direct Pitch Section -->
-  <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-900">
+  <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900">
     <div class="max-w-3xl mx-auto text-center">
       <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Start Your Project</span>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Let's Build Something Exceptional</h2>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4 font-display">Let's Build Something Exceptional</h2>
       <p class="text-slate-400 text-sm max-w-lg mx-auto mb-8">
         Have an urgent website launch, a custom web app, or an automation workflow to deploy? Send your brief directly to my inbox or DM me.
       </p>
@@ -526,7 +574,7 @@
             <label class="block text-xs font-mono text-slate-400 mb-1">Project Brief & Stated Budget</label>
             <textarea rows="3" required x-model="contactBrief" placeholder="Describe the website, required features, and your target budget..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500"></textarea>
           </div>
-          <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition shadow-lg shadow-indigo-600/30">
+          <button type="submit" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition shadow-lg shadow-indigo-600/30">
             Send Brief Directly
           </button>
         </form>
@@ -552,7 +600,119 @@
     <p>© 2026 Mayank Sahu. Built for speed, conversions, and clean systems architecture.</p>
   </footer>
 
+  <!-- Lenis + Ambient Canvas + 3D Tilt Scripts -->
   <script>
+    // Initialize Lenis Inertial Smooth Scrolling
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.1,
+    });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Interactive 3D Specular Tilt on Glass Cards
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -5;
+        const rotateY = ((x - centerX) / centerX) * 5;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+
+    // 60fps Ambient Particle Mesh Canvas (Zero Asset Download Lag)
+    (function initAmbientCanvas() {
+      const canvas = document.getElementById('ambient-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let mouseX = -1000, mouseY = -1000;
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = canvas.parentElement.offsetHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY + window.scrollY;
+      });
+
+      const particles = [];
+      const count = Math.min(width < 768 ? 35 : 75, 75);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          radius: Math.random() * 1.5 + 0.8
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        
+        // Draw connected mesh lines
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > width) p.vx *= -1;
+          if (p.y < 0 || p.y > height) p.vy *= -1;
+
+          // Mouse reactivity
+          const dxMouse = mouseX - p.x;
+          const dyMouse = mouseY - p.y;
+          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+          if (distMouse < 180) {
+            p.x -= (dxMouse / distMouse) * 0.8;
+            p.y -= (dyMouse / distMouse) * 0.8;
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(99, 102, 241, 0.45)';
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(99, 102, 241, ${0.12 * (1 - dist / 120)})`;
+              ctx.lineWidth = 0.7;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
     function portfolioApp() {
       return {
         projectType: 'business',
