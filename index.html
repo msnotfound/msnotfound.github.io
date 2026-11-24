@@ -1,754 +1,1279 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mayank Sahu | Full-Stack Systems & Creative Engineering Studio</title>
-  <meta name="description" content="Engineering bespoke, sub-second web platforms, luxury brand experiences, and autonomous AI automation pipelines. 48-hour turnarounds.">
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Alpine.js -->
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <!-- Lenis Smooth Scroll -->
-  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-            display: ['"Space Grotesk"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-            }
-          }
+<!doctype html>
+<html lang="en" data-theme="dark" data-slot-hero="waves" data-slot-craft="matrix" data-slot-work="folders" data-slot-telemetry="heatmap">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d1016" />
+    <title>Mayank Sahu — AI Systems Engineer</title>
+    <meta
+      name="description"
+      content="Mayank Sahu builds agent infrastructure, local AI memory, research prototypes, and backend systems under explicit constraints."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230d1016'/%3E%3Cpath d='M12 48V16h8l12 18 12-18h8v32h-8V29L35 43h-6L20 29v19z' fill='%23d1ff48'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&family=Familjen+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (() => {
+        const html = document.documentElement;
+        try {
+          const storedTheme = localStorage.getItem("mayank-portfolio-theme");
+          const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+          html.dataset.theme =
+            storedTheme === "light" || storedTheme === "dark"
+              ? storedTheme
+              : prefersDark
+                ? "dark"
+                : "light";
+        } catch {
+          html.dataset.theme = "dark";
         }
-      }
-    }
-  </script>
-  <style>
-    [x-cloak] { display: none !important; }
-    
-    /* Smooth Canvas & Glass */
-    .glass-card {
-      background: rgba(13, 17, 28, 0.72);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-    
-    .glow-accent {
-      box-shadow: 0 0 60px -10px rgba(99, 102, 241, 0.28);
-    }
 
-    /* 3D Specular Tilt Card */
-    .tilt-card {
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
-      transform-style: preserve-3d;
-      position: relative;
-    }
-    .tilt-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99, 102, 241, 0.15), transparent 80%);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .tilt-card:hover::after {
-      opacity: 1;
-    }
-    
-    /* Gradient Shimmer Border */
-    .shimmer-badge {
-      background: linear-gradient(90deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.2), rgba(99, 102, 241, 0.15));
-      background-size: 200% 100%;
-      animation: shimmer 4s infinite linear;
-    }
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-  </style>
-</head>
-<body class="bg-[#05070c] text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden" x-data="portfolioApp()">
+        // Pre-paint mount-time component selector (zero flash, fresh each visit)
+        const slots = {
+          hero: ["waves", "constellation", "isobars"],
+          craft: ["matrix", "axioms"],
+          work: ["folders", "ledger", "inspector"],
+          telemetry: ["heatmap", "cadence"],
+        };
+        const pick = (arr, avoid) => {
+          const pool = avoid && arr.length > 1 ? arr.filter((x) => x !== avoid) : arr;
+          let r = Math.random();
+          try {
+            const b = new Uint32Array(1);
+            crypto.getRandomValues(b);
+            r = b[0] / 0xffffffff;
+          } catch {}
+          return pool[Math.floor(r * pool.length)] || arr[0];
+        };
 
-  <!-- Film Grain Noise Texture Overlay -->
-  <div class="fixed inset-0 pointer-events-none z-50 opacity-[0.035] mix-blend-overlay" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
+        let prev = {};
+        try {
+          prev = JSON.parse(sessionStorage.getItem("mayank-portfolio-edition") || "{}");
+        } catch {}
 
-  <!-- Top Announcement -->
-  <div class="bg-indigo-950/70 border-b border-indigo-900/40 text-indigo-300 text-xs py-2 px-4 text-center font-medium backdrop-blur-md">
-    <div class="max-w-7xl mx-auto flex items-center justify-center space-x-2">
-      <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span>Available for Select Web & Automation Contracts • Guaranteed 48-Hour Turnaround • 50/50 Escrow Terms</span>
+        const chosen = {
+          hero: pick(slots.hero, prev.hero),
+          craft: pick(slots.craft, prev.craft),
+          work: pick(slots.work, prev.work),
+          telemetry: pick(slots.telemetry, prev.telemetry),
+        };
+        html.dataset.slotHero = chosen.hero;
+        html.dataset.slotCraft = chosen.craft;
+        html.dataset.slotWork = chosen.work;
+        html.dataset.slotTelemetry = chosen.telemetry;
+        try {
+          sessionStorage.setItem("mayank-portfolio-edition", JSON.stringify(chosen));
+        } catch {}
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./experience.css" />
+    <noscript><style>.initial-loader,.mobile-reveal-pill,.nav-toggle,.architecture-tabs{display:none!important}html,body,a,button{cursor:auto!important}.site-nav{display:flex!important;position:static;flex-direction:row;flex-wrap:wrap;gap:16px;padding:20px}.architecture-panels{height:auto;overflow:visible}.architecture-track{display:block}.architecture-panel,.architecture-panel[hidden]{display:flex;height:auto;gap:24px}</style></noscript>
+  </head>
+  <body>
+    <div class="initial-loader" data-loader role="dialog" aria-modal="true" aria-labelledby="loader-title" aria-busy="true">
+      <span class="loader-kicker">Independent engineering, 2026</span>
+      <span class="loader-title" id="loader-title">Mayank Sahu</span>
+      <span class="loader-count" data-loader-count aria-hidden="true">00</span>
+      <div class="loader-actions">
+        <button class="loader-start" type="button" data-loader-start disabled>Enter with sound</button>
+        <button class="loader-silent" type="button" data-loader-silent disabled>Enter without sound</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Navigation -->
-  <header class="sticky top-0 z-40 bg-[#05070c]/80 backdrop-blur-xl border-b border-slate-800/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      <a href="#" class="flex items-center space-x-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
-          M
-        </div>
-        <div>
-          <span class="font-bold text-lg tracking-tight text-white group-hover:text-indigo-400 transition">Mayank Sahu</span>
-          <span class="text-[10px] block uppercase tracking-widest font-mono text-slate-400">Creative & Systems Studio</span>
-        </div>
-      </a>
+    <div class="screen-vignette screen-vignette-top" aria-hidden="true"></div>
+    <div class="screen-vignette screen-vignette-bottom" aria-hidden="true"></div>
+    <a class="skip-link" href="#selected-systems">Skip to work</a>
 
-      <nav class="hidden md:flex items-center space-x-8 text-xs font-mono uppercase tracking-wider text-slate-300">
-        <a href="#work" class="hover:text-white transition">Live Flagship Demos</a>
-        <a href="#services" class="hover:text-white transition">Capabilities</a>
-        <a href="#calculator" class="hover:text-white transition">Instant Quote</a>
-        <a href="#process" class="hover:text-white transition">Escrow Guarantee</a>
-      </nav>
+    <!-- Top Floating Utility Pill: Live Edition Shuffle + Command Palette -->
+    <div class="top-utility-bar" role="region" aria-label="Portfolio controls">
+      <button
+        class="edition-shuffle-btn"
+        type="button"
+        data-edition-shuffle
+        title="Load a slightly different experience"
+        aria-label="Load a slightly different experience"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16 3h5v5" />
+          <path d="M4 20 21 3" />
+          <path d="M21 16v5h-5" />
+          <path d="M15 15 21 21" />
+          <path d="M4 4l5 5" />
+        </svg>
+        <span data-edition-label>Edition #01</span>
+      </button>
+      <button class="cmd-trigger-btn" type="button" data-cmd-open aria-label="Open command palette">
+        <span>Jump</span>
+        <kbd>⌘K</kbd>
+      </button>
+    </div>
 
-      <div class="flex items-center space-x-3">
-        <a href="https://github.com/msnotfound" target="_blank" class="text-slate-400 hover:text-white text-xs font-mono px-3.5 py-2 border border-slate-800/80 rounded-lg hover:border-slate-700 transition">
+    <!-- Right-Edge Segmented Vertical Scroll Progress Rail -->
+    <nav class="scroll-rail" data-scroll-rail aria-label="Section progress">
+      <a href="#top" class="is-active" aria-current="location"><span class="scroll-rail-label">Intro</span><span class="scroll-rail-bar"></span></a>
+      <a href="#selected-systems"><span class="scroll-rail-label">Flagships</span><span class="scroll-rail-bar"></span></a>
+      <a href="#craft-lens"><span class="scroll-rail-label">Craft</span><span class="scroll-rail-bar"></span></a>
+      <a href="#work-explorer"><span class="scroll-rail-label">Work</span><span class="scroll-rail-bar"></span></a>
+      <a href="#research-engineering"><span class="scroll-rail-label">Research</span><span class="scroll-rail-bar"></span></a>
+      <a href="#github-activity"><span class="scroll-rail-label">Activity</span><span class="scroll-rail-bar"></span></a>
+      <a href="#contact"><span class="scroll-rail-label">Contact</span><span class="scroll-rail-bar"></span></a>
+    </nav>
+
+    <button class="nav-toggle" type="button" aria-label="Open site index" aria-expanded="false" aria-controls="site-index" title="Open site index">
+      <span data-nav-index aria-hidden="true">00</span> Menu
+    </button>
+
+    <nav class="site-nav" id="site-navigation" aria-label="Site sections">
+      <a href="#selected-systems" data-nav-number="01"><span class="nav-number" aria-hidden="true">01</span><span class="nav-label">Systems</span></a>
+      <a href="#work-explorer" data-nav-number="02"><span class="nav-number" aria-hidden="true">02</span><span class="nav-label">Archive</span></a>
+      <a href="#research-engineering" data-nav-number="03"><span class="nav-number" aria-hidden="true">03</span><span class="nav-label">Research</span></a>
+      <a href="./contact/index.html" data-nav-number="04"><span class="nav-number" aria-hidden="true">04</span><span class="nav-label">Contact</span></a>
+    </nav>
+
+    <dialog class="navigation-drawer" id="site-index" data-navigation-dialog aria-labelledby="index-title">
+      <header class="index-header">
+        <span id="index-title">Mayank Sahu <span>Portfolio, 2026</span></span>
+        <button type="button" data-nav-close aria-label="Close site index" title="Close site index">
+          <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
+        </button>
+      </header>
+      <div class="index-body"><span class="index-eyebrow">Index</span><div data-nav-slot></div></div>
+      <footer class="index-footer">
+        <a href="https://github.com/msnotfound" target="_blank" rel="noreferrer">
           GitHub
+          <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
         </a>
-        <a href="#contact" class="px-5 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
-          Book Project
-        </a>
+        <span>AI systems &amp; applied research</span>
+      </footer>
+    </dialog>
+
+    <!-- Command Palette Modal (Cmd/Ctrl + K) -->
+    <dialog class="cmd-dialog" data-cmd-dialog aria-label="Command palette">
+      <div class="cmd-head">
+        <input type="text" data-cmd-input placeholder="Jump to a section, shuffle edition, or switch a component…" autocomplete="off" />
+        <button type="button" data-cmd-close>ESC</button>
       </div>
-    </div>
-  </header>
-
-  <!-- Hero Section with Interactive Particle Canvas -->
-  <section class="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden">
-    <!-- Interactive Ambient Particle Canvas -->
-    <canvas id="ambient-canvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
-    
-    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none"></div>
-    
-    <div class="max-w-4xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full shimmer-badge border border-indigo-500/30 text-indigo-300 text-xs font-mono font-medium mb-8">
-        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-        <span>Creative Frontend • WebGL / Alpine • Python • 48h Turnarounds</span>
+      <div class="cmd-list" data-cmd-list>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="shuffle" data-cmd-search="shuffle reroll edition random components"><span>Shuffle page component edition</span><small>36 combos</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="scroll" data-cmd-target="#selected-systems" data-cmd-search="fleetorch mnemium flagships systems"><span>Go to Fleetorch &amp; Mnemium</span><small>Section</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="scroll" data-cmd-target="#craft-lens" data-cmd-search="operating range axioms capabilities craft"><span>Go to Craft &amp; Capabilities Band</span><small>Section</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="scroll" data-cmd-target="#work-explorer" data-cmd-search="work archive folders ledger inspector projects"><span>Go to Work Explorer</span><small>Section</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="scroll" data-cmd-target="#research-engineering" data-cmd-search="phantom san swg tropicam research manuscripts"><span>Go to Applied Research &amp; Manuscripts</span><small>Section</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="scroll" data-cmd-target="#github-activity" data-cmd-search="github contributions heatmap cadence commits"><span>Inspect GitHub Telemetry</span><small>Section</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="slot" data-cmd-target="work:folders" data-cmd-search="work variant folders archive 3d"><span>Mount Work Slot → 3-Folder Archive</span><small>Component</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="slot" data-cmd-target="work:ledger" data-cmd-search="work variant ledger editorial preview"><span>Mount Work Slot → Editorial Ledger</span><small>Component</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="slot" data-cmd-target="work:inspector" data-cmd-search="work variant inspector dossier bench"><span>Mount Work Slot → System Inspector Bench</span><small>Component</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="slot" data-cmd-target="craft:matrix" data-cmd-search="craft variant matrix operating range"><span>Mount Craft Slot → Operating Range Matrix</span><small>Component</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="slot" data-cmd-target="craft:axioms" data-cmd-search="craft variant axioms principles tradeoffs"><span>Mount Craft Slot → Systems Axioms Ledger</span><small>Component</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="slot" data-cmd-target="telemetry:heatmap" data-cmd-search="telemetry variant github heatmap calendar"><span>Mount Telemetry → 53-Week Heatmap</span><small>Component</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="slot" data-cmd-target="telemetry:cadence" data-cmd-search="telemetry variant github monthly bar chart cadence"><span>Mount Telemetry → Monthly Cadence Chart</span><small>Component</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="link" data-cmd-target="./contact/index.html" data-cmd-search="contact email brief"><span>Open Contact Page</span><small>Page</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="copy-email" data-cmd-search="copy email hello@mayanksahu.dev"><span>Copy hello@mayanksahu.dev</span><small>Action</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="theme" data-cmd-search="theme dark light toggle"><span>Toggle Dark / Light Theme</span><small>Action</small></button>
+        <button type="button" class="cmd-item" data-cmd-item data-cmd-action="link" data-cmd-target="https://github.com/msnotfound" data-cmd-external="true" data-cmd-search="github profile repos"><span>Open GitHub (@msnotfound)</span><small>External</small></button>
       </div>
-      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6 font-display">
-        I engineer websites that convert and automations that save 20+ hours a week.
-      </h1>
-      <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
-        Stop settling for bloated cookie-cutter templates or fragile no-code toys. I craft custom, sub-second web platforms with clean architecture, verified milestone delivery, and rapid turnarounds.
-      </p>
+    </dialog>
 
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#work" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs uppercase tracking-wider rounded-xl shadow-xl shadow-indigo-600/30 transition flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
-          <span>Explore Live Interactive Demos</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-        </a>
-        <a href="#calculator" class="w-full sm:w-auto px-8 py-4 bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-800 font-semibold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2">
-          <span>Calculate Project Cost</span>
-        </a>
-      </div>
+    <button class="sound-toggle" type="button" data-sound-toggle aria-label="Pause background music" aria-pressed="true">
+      <span class="sound-toggle__bars" aria-hidden="true">
+        <span class="sound-toggle__bar"></span>
+        <span class="sound-toggle__bar"></span>
+        <span class="sound-toggle__bar"></span>
+      </span>
+    </button>
+    <audio data-ambient-audio src="./ambient-loop.webm" loop preload="auto"></audio>
 
-      <!-- Trust Specs -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-12 border-t border-slate-900 text-left">
-        <div>
-          <span class="block text-2xl font-extrabold text-white font-mono">100/100</span>
-          <span class="text-xs text-slate-500 font-medium">Lighthouse Performance</span>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-white font-mono">48-72h</span>
-          <span class="text-xs text-slate-500 font-medium">Rapid Turnaround</span>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-white font-mono">50/50</span>
-          <span class="text-xs text-slate-500 font-medium">Milestone Escrow Terms</span>
-        </div>
-        <div>
-          <span class="block text-2xl font-extrabold text-white font-mono">14 Days</span>
-          <span class="text-xs text-slate-500 font-medium">Post-Launch Warranty</span>
-        </div>
-      </div>
-    </div>
-  </section>
+    <button class="mobile-reveal-pill" type="button" data-mobile-trigger aria-label="Hold to reveal runtime layer">
+      <span class="pill-orbit-rotor" aria-hidden="true">
+        <svg class="pill-orbit" viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <path id="press-orbit" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0" />
+          </defs>
+          <text text-anchor="middle">
+            <textPath href="#press-orbit" startOffset="12.5%">Press here</textPath>
+            <textPath href="#press-orbit" startOffset="37.5%">Press here</textPath>
+            <textPath href="#press-orbit" startOffset="62.5%">Press here</textPath>
+            <textPath href="#press-orbit" startOffset="87.5%">Press here</textPath>
+          </text>
+        </svg>
+      </span>
+      <span class="pill-indicator" aria-hidden="true">
+        <svg class="pill-hand-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 11.5V5.75a1.75 1.75 0 1 1 3.5 0v4.5" />
+          <path d="M11.5 10V8.75a1.75 1.75 0 1 1 3.5 0V11" />
+          <path d="M15 10.5a1.75 1.75 0 1 1 3.5 0v1.25" />
+          <path d="M8 11.5 6.7 10.2a1.75 1.75 0 0 0-2.48 2.48l4.1 4.1A6 6 0 0 0 12.56 18H14a4.5 4.5 0 0 0 4.5-4.5v-1.75" />
+        </svg>
+      </span>
+    </button>
 
-  <!-- Live Selected Work with 3D Tilt Cards -->
-  <section id="work" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900 bg-[#05070c]/50">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
-        <div>
-          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-indigo-400 mb-2">Live Proof of Work</div>
-          <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display">Flagship Deployed Web Systems</h2>
-        </div>
-        <p class="text-slate-400 text-sm mt-3 md:mt-0 max-w-md leading-relaxed">
-          Explore full-scale live interactive platforms built to demonstrate industry-grade craft, reactive UI state, and rapid speed.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-        <!-- Project 1: Real Estate -->
-        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
-          <div>
-            <div class="relative h-60 overflow-hidden bg-slate-900">
-              <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" alt="Real Estate" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-              <div class="absolute top-4 left-4">
-                <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-indigo-600/90 text-white backdrop-blur-md">Live Demo</span>
-              </div>
-              <div class="absolute bottom-4 right-4 bg-slate-950/80 px-2.5 py-1 rounded text-xs font-mono text-emerald-400 border border-slate-800">
-                100 Lighthouse
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="text-[11px] font-mono text-indigo-400 uppercase tracking-wider mb-1">Real Estate & Brokerages</div>
-              <h3 class="text-xl font-bold text-white mb-2 font-display">AURA | Architectural Estates</h3>
-              <p class="text-xs text-slate-400 leading-relaxed mb-4">
-                Luxury MLS property showcase with reactive mortgage calculator sliders, dynamic filters, interactive 3D floor plans, and VIP chauffeur tour booking modal.
-              </p>
-              <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Alpine.js State</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Tailwind Glass</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Mortgage Engine</span>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/real-estate-demo/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-indigo-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
-              <span>View Live Website</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 2: Luxury Wedding & Event -->
-        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
-          <div>
-            <div class="relative h-60 overflow-hidden bg-slate-900">
-              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Luxury Wedding" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-              <div class="absolute top-4 left-4">
-                <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-amber-600/90 text-white backdrop-blur-md">Live Demo</span>
-              </div>
-              <div class="absolute bottom-4 right-4 bg-slate-950/80 px-2.5 py-1 rounded text-xs font-mono text-amber-400 border border-slate-800">
-                Editorial Luxury
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="text-[11px] font-mono text-amber-400 uppercase tracking-wider mb-1">Bespoke Events & Celebrations</div>
-              <h3 class="text-xl font-bold text-white mb-2 font-display">L'ÉTERNEL | Private Soirée</h3>
-              <p class="text-xs text-slate-400 leading-relaxed mb-4">
-                Haute couture Tuscan estate celebration site featuring live countdown engine, interactive guest RSVP modal with wax seal stamp, 3-day itinerary, and gift endowment registry.
-              </p>
-              <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">RSVP Engine</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Countdown Timer</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Endowment Fund</span>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/wedding/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-amber-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
-              <span>View Live Website</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 3: AI Systems & Automations -->
-        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
-          <div>
-            <div class="relative h-60 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-cyan-950/40 to-slate-900">
-              <div class="w-full bg-slate-950/90 p-4 rounded-xl border border-cyan-500/30 font-mono text-[11px] text-slate-300 space-y-1.5">
-                <div class="flex items-center justify-between text-cyan-400 font-bold">
-                  <span>[INBOUND_WEBHOOK]</span>
-                  <span class="text-emerald-400">142ms</span>
-                </div>
-                <div class="text-slate-400">-> Vector Query: sqlite-vec</div>
-                <div class="text-purple-400">-> Groq LPU (Llama 3.3 70B)</div>
-                <div class="text-emerald-400">-> CRM Sync & WhatsApp Alert</div>
-              </div>
-              <div class="absolute top-4 left-4">
-                <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-cyan-600/90 text-white backdrop-blur-md">Live Demo</span>
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="text-[11px] font-mono text-cyan-400 uppercase tracking-wider mb-1">AI & Workflow Infrastructure</div>
-              <h3 class="text-xl font-bold text-white mb-2 font-display">SYNTRA | Autonomous Systems</h3>
-              <p class="text-xs text-slate-400 leading-relaxed mb-4">
-                Production-grade automation platform featuring live 4-stage pipeline execution simulator, real-time ROI labor savings calculator, and LLM latency benchmark matrix.
-              </p>
-              <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Live Simulator</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">ROI Calculator</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Model Matrix</span>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/ai-studio/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-cyan-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
-              <span>View Live Website</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 4: Modern Bakery & E-Commerce -->
-        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
-          <div>
-            <div class="relative h-60 overflow-hidden bg-slate-900">
-              <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80" alt="Bakery & Cafe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-              <div class="absolute top-4 left-4">
-                <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-orange-600/90 text-white backdrop-blur-md">Live Demo</span>
-              </div>
-              <div class="absolute bottom-4 right-4 bg-slate-950/80 px-2.5 py-1 rounded text-xs font-mono text-orange-400 border border-slate-800">
-                Click & Collect
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="text-[11px] font-mono text-orange-400 uppercase tracking-wider mb-1">Artisanal Food & Hospitality</div>
-              <h3 class="text-xl font-bold text-white mb-2 font-display">VELVET & CRUMB | Viennoiserie</h3>
-              <p class="text-xs text-slate-400 leading-relaxed mb-4">
-                Parisian/Nordic bakery platform with live stone-hearth oven pull clock, interactive Click-and-Collect Morning Box builder, and pickup window scheduler.
-              </p>
-              <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Live Oven Clock</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Box Builder</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Pickup Engine</span>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 pb-6 pt-0">
-            <a href="https://msnotfound.github.io/bakery/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-orange-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
-              <span>View Live Website</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 5: Full-Stack SaaS (DocMagic) -->
-        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
-          <div>
-            <div class="relative h-60 overflow-hidden bg-slate-900">
-              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="DocMagic SaaS" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-              <div class="absolute top-4 left-4">
-                <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-emerald-600/90 text-white backdrop-blur-md">Production SaaS</span>
-              </div>
-              <div class="absolute bottom-4 right-4 bg-slate-950/80 px-2.5 py-1 rounded text-xs font-mono text-emerald-400 border border-slate-800">
-                Deployed
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="text-[11px] font-mono text-emerald-400 uppercase tracking-wider mb-1">Full-Stack SaaS Platform</div>
-              <h3 class="text-xl font-bold text-white mb-2 font-display">DocMagic AI Document Engine</h3>
-              <p class="text-xs text-slate-400 leading-relaxed mb-4">
-                Production-grade SaaS for parsing, summarizing, and transforming unstructured documents with sub-second API pipelines and interactive editor.
-              </p>
-              <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Next.js</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">FastAPI</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Vercel Deploy</span>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 pb-6 pt-0">
-            <a href="https://docmagicmaya.vercel.app/" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-emerald-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
-              <span>View Live App</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 6: Systems Engineering Proof of Work -->
-        <div class="glass-card rounded-2xl overflow-hidden tilt-card flex flex-col justify-between">
-          <div>
-            <div class="relative h-60 overflow-hidden bg-slate-900 flex items-center justify-center p-6 bg-gradient-to-br from-indigo-950 to-slate-900">
-              <div class="w-full bg-slate-950/90 p-4 rounded-xl border border-indigo-500/30 font-mono text-[11px] text-slate-300 space-y-1.5">
-                <div class="text-indigo-400 font-bold">msnotfound/mnemium</div>
-                <div class="text-slate-400">• SQLite-WASM + sqlite-vec engine</div>
-                <div class="text-slate-400">• In-browser vector memory store</div>
-                <div class="text-emerald-400">• Zero network calls / Zero server cost</div>
-              </div>
-              <div class="absolute top-4 left-4">
-                <span class="px-2.5 py-1 text-[10px] font-mono font-bold uppercase rounded bg-indigo-600/90 text-white backdrop-blur-md">Open Source</span>
-              </div>
-            </div>
-            <div class="p-6">
-              <div class="text-[11px] font-mono text-indigo-400 uppercase tracking-wider mb-1">Systems & Edge Infrastructure</div>
-              <h3 class="text-xl font-bold text-white mb-2 font-display">Fleetorch & Mnemium Systems</h3>
-              <p class="text-xs text-slate-400 leading-relaxed mb-4">
-                High-performance edge systems: Fleetorch (Cloud container supervisor with terminal multiplexing) and Mnemium (In-browser WASM Vector DB).
-              </p>
-              <div class="flex flex-wrap gap-1.5 mb-6">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">WASM / C</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Python Containers</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 border border-slate-800 text-slate-300">Distributed Infra</span>
-              </div>
-            </div>
-          </div>
-          <div class="px-6 pb-6 pt-0">
-            <a href="https://github.com/msnotfound" target="_blank" class="w-full py-3 bg-slate-900/90 hover:bg-indigo-600 hover:text-white border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
-              <span>View GitHub Codebase</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Interactive Project Pricing Calculator -->
-  <section id="calculator" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900">
-    <div class="max-w-4xl mx-auto glass-card rounded-3xl p-8 sm:p-12 glow-accent border border-indigo-500/20">
-      <div class="text-center max-w-xl mx-auto mb-10">
-        <span class="text-indigo-400 text-xs font-mono font-bold uppercase tracking-widest">Instant Estimator</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-3 font-display">Calculate Your Project Cost & Timeline</h2>
-        <p class="text-slate-400 text-xs sm:text-sm">Select your scope below for transparent milestone-based pricing with zero hidden fees.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="space-y-6">
-          <!-- Type -->
-          <div>
-            <label class="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-2">1. Project Type</label>
-            <div class="grid grid-cols-1 gap-2.5">
-              <label class="flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition"
-                     :class="projectType === 'landing' ? 'bg-indigo-950/60 border-indigo-500 text-white' : 'bg-slate-900/50 border-slate-800 text-slate-300 hover:border-slate-700'">
-                <div class="flex items-center space-x-3">
-                  <input type="radio" value="landing" x-model="projectType" class="text-indigo-600 focus:ring-0">
-                  <span class="text-xs font-semibold">Modern High-Converting Landing Page</span>
-                </div>
-                <span class="text-xs font-mono text-indigo-400">$200 - $350</span>
-              </label>
-
-              <label class="flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition"
-                     :class="projectType === 'business' ? 'bg-indigo-950/60 border-indigo-500 text-white' : 'bg-slate-900/50 border-slate-800 text-slate-300 hover:border-slate-700'">
-                <div class="flex items-center space-x-3">
-                  <input type="radio" value="business" x-model="projectType" class="text-indigo-600 focus:ring-0">
-                  <span class="text-xs font-semibold">Multi-Page Luxury / Real Estate / Agency</span>
-                </div>
-                <span class="text-xs font-mono text-indigo-400">$350 - $650</span>
-              </label>
-
-              <label class="flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition"
-                     :class="projectType === 'fullstack' ? 'bg-indigo-950/60 border-indigo-500 text-white' : 'bg-slate-900/50 border-slate-800 text-slate-300 hover:border-slate-700'">
-                <div class="flex items-center space-x-3">
-                  <input type="radio" value="fullstack" x-model="projectType" class="text-indigo-600 focus:ring-0">
-                  <span class="text-xs font-semibold">Full-Stack SaaS / AI Workflow Platform</span>
-                </div>
-                <span class="text-xs font-mono text-indigo-400">$750 - $1,500</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Addons -->
-          <div>
-            <label class="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-2">2. Power Add-ons</label>
-            <div class="space-y-2">
-              <label class="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-900/30 cursor-pointer">
-                <div class="flex items-center space-x-2.5">
-                  <input type="checkbox" x-model="addonAutomation" class="rounded text-indigo-600 focus:ring-0 bg-slate-950 border-slate-700">
-                  <span class="text-xs text-slate-300">AI / CRM Webhook Automation (+WhatsApp Alerts)</span>
-                </div>
-                <span class="text-xs font-mono text-slate-400">+$150</span>
-              </label>
-
-              <label class="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-900/30 cursor-pointer">
-                <div class="flex items-center space-x-2.5">
-                  <input type="checkbox" x-model="addonSpeed" class="rounded text-indigo-600 focus:ring-0 bg-slate-950 border-slate-700">
-                  <span class="text-xs text-slate-300">Rush Delivery (Guaranteed 48 Hours)</span>
-                </div>
-                <span class="text-xs font-mono text-slate-400">+$100</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Result Box -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
-          <div>
-            <span class="text-[11px] font-mono text-slate-400 uppercase tracking-widest block mb-1">Estimated Investment</span>
-            <div class="text-4xl font-extrabold text-white font-mono mb-2" x-text="'$' + calculateTotal()"></div>
-            <div class="text-xs text-emerald-400 font-mono mb-6 flex items-center gap-1.5">
-              <span>✓</span> <span x-text="calculateTimeline()"></span>
-            </div>
-
-            <div class="space-y-2 text-xs text-slate-400 pt-4 border-t border-slate-800">
-              <div class="flex justify-between">
-                <span>Milestone 1 (Escrow Deposit):</span>
-                <span class="font-mono text-white" x-text="'$' + (calculateTotal() * 0.5)"></span>
-              </div>
-              <div class="flex justify-between">
-                <span>Milestone 2 (On Live Approval):</span>
-                <span class="font-mono text-white" x-text="'$' + (calculateTotal() * 0.5)"></span>
-              </div>
-              <div class="flex justify-between">
-                <span>Payment Channels:</span>
-                <span class="text-slate-300">Stripe / Wise / Upwork</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-8">
-            <button @click="openConsultation('Quote for ' + projectType + ' ($' + calculateTotal() + ')')" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-indigo-600/30 transition">
-              Lock In This Scope & Quote
-            </button>
-            <p class="text-[10px] text-center text-slate-500 mt-2.5">No commitment required. 100% money-back escrow protection.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Process & Escrow Terms -->
-  <section id="process" class="py-20 px-4 sm:px-6 lg:px-8 border-t border-slate-900">
-    <div class="max-w-5xl mx-auto">
-      <div class="text-center mb-16">
-        <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Risk-Free Process</span>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 font-display">Zero Client Risk Milestone Guarantee</h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass-card p-6 rounded-2xl border border-slate-800 tilt-card">
-          <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-mono font-bold text-lg mb-4">
-            01
-          </div>
-          <h4 class="text-base font-bold text-white mb-2">Scope Alignment & Staging</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Within 24 hours of brief agreement, you receive a private live staging URL with responsive layout and interactive components.
-          </p>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl border border-slate-800 tilt-card">
-          <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-mono font-bold text-lg mb-4">
-            02
-          </div>
-          <h4 class="text-base font-bold text-white mb-2">Interactive Feedback Loop</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Rapid revisions implemented within 2 to 4 hours. No waiting days for small copy or styling modifications.
-          </p>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl border border-slate-800 tilt-card">
-          <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-mono font-bold text-lg mb-4">
-            03
-          </div>
-          <h4 class="text-base font-bold text-white mb-2">Milestone Escrow Release</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            You only release the final 50% milestone after the project is deployed to your custom domain and tested 100% bug-free.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact & Direct Pitch Section -->
-  <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900">
-    <div class="max-w-3xl mx-auto text-center">
-      <span class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">Start Your Project</span>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4 font-display">Let's Build Something Exceptional</h2>
-      <p class="text-slate-400 text-sm max-w-lg mx-auto mb-8">
-        Have an urgent website launch, a custom web app, or an automation workflow to deploy? Send your brief directly to my inbox or DM me.
-      </p>
-
-      <div class="glass-card p-8 rounded-2xl text-left border border-slate-800">
-        <form @submit.prevent="submitContact">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Your Name / Handle</label>
-              <input type="text" required x-model="contactName" placeholder="e.g. @elena_volkova__h or Elena" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
-            </div>
-            <div>
-              <label class="block text-xs font-mono text-slate-400 mb-1">Your Email or DM Link</label>
-              <input type="text" required x-model="contactReach" placeholder="email@domain.com or Threads handle" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
-            </div>
-          </div>
-          <div class="mb-4">
-            <label class="block text-xs font-mono text-slate-400 mb-1">Project Brief & Stated Budget</label>
-            <textarea rows="3" required x-model="contactBrief" placeholder="Describe the website, required features, and your target budget..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500"></textarea>
-          </div>
-          <button type="submit" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg transition shadow-lg shadow-indigo-600/30">
-            Send Brief Directly
+    <main class="main-layer js-pageContent" id="top" data-mask-root>
+      <!-- ==============================================================
+           BASE LAYER (Surface Portfolio — Zero Repetition Across Slots)
+           ============================================================== -->
+      <div class="layer layer--base">
+        <div class="mask-stage">
+          <canvas class="hero-canvas" data-hero-canvas aria-hidden="true"></canvas>
+          <div class="grain" aria-hidden="true"></div>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme" aria-pressed="true">
+            <span class="theme-toggle__track" aria-hidden="true">
+              <span class="theme-toggle__sun">
+                <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3.5" />
+                  <path d="M12 2.75v2.1M12 19.15v2.1m-7.72-14.97 1.49 1.49m12.46 12.46 1.49 1.49M2.75 12h2.1m14.3 0h2.1m-16.97 7.72 1.49-1.49m12.46-12.46 1.49-1.49" />
+                </svg>
+              </span>
+              <span class="theme-toggle__moon">
+                <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20.2 14.35A7.2 7.2 0 0 1 9.65 3.8a8.9 8.9 0 1 0 10.55 10.55Z" />
+                </svg>
+              </span>
+            </span>
           </button>
-        </form>
 
-        <div x-show="submitted" class="mt-4 p-3 bg-emerald-950/60 border border-emerald-800 rounded-lg text-emerald-300 text-xs text-center font-medium">
-          ✓ Brief received! I respond within 2 hours.
+          <div class="hero-stack">
+            <section class="hero hero-base" aria-label="Portfolio introduction">
+              <div class="hero-mask-frame" data-mask-target>
+                <div class="hero-copy">
+                  <p class="kicker">Mayank Sahu — AI systems engineering</p>
+                  <h1>
+                    <span class="line-wrap"><span>I engineer high-trust systems</span></span>
+                    <span class="line-wrap"><span><em>built to survive</em></span></span>
+                    <span class="line-wrap"><span>an unpredictable machine age</span></span>
+                  </h1>
+                </div>
+
+                <div class="hero-reveal" data-mask-surface aria-hidden="true">
+                  <div class="hero-copy">
+                    <p class="kicker">Mayank Sahu — Runtime invariants</p>
+                    <h2>
+                      <span class="line-wrap"><span>Stress-tested against chaos</span></span>
+                      <span class="line-wrap"><span><em>so they never buckle</em></span></span>
+                      <span class="line-wrap"><span>under production load</span></span>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div class="hero-grid">
+              <p>
+                Agent infrastructure, local AI memory, backend prototypes, and applied
+                research systems built around explicit constraints.
+              </p>
+            </div>
+
+            <nav class="hero-actions" aria-label="Primary links">
+              <a class="magnetic-link primary-link" href="#selected-systems" data-magnetic>
+                Explore systems
+              </a>
+              <a class="magnetic-link" href="https://github.com/msnotfound" target="_blank" rel="noreferrer" data-magnetic>
+                GitHub
+              </a>
+              <a class="magnetic-link" href="./contact/index.html" data-magnetic>
+                Contact
+              </a>
+            </nav>
+          </div>
+
+          <a class="hero-scroll" href="#selected-systems"><span class="scroll-stem" aria-hidden="true"></span> Selected work below</a>
         </div>
+
+        <div class="cursor-orbit" data-mask-cursor aria-hidden="true"></div>
+
+        <div class="passing-statement" aria-hidden="true">
+          <div class="statement-track">From an open question <em>to a working system</em></div>
+          <span class="statement-rule"></span>
+        </div>
+
+        <!-- FLAGSHIP DEEP DIVE 01: Fleetorch -->
+        <section class="flagship-section" id="selected-systems" aria-labelledby="systems-title">
+          <header class="chapter-heading">
+            <span class="section-label">Flagship architecture</span>
+            <h2 id="systems-title">Where architecture meets<br /><em>execution under load</em></h2>
+            <p class="chapter-aside">Infrastructure, local memory, and the interfaces between engineers and autonomous agents.</p>
+          </header>
+
+          <div class="fleet-sequence" data-fleet-sequence>
+            <div class="fleet-stage" data-fleet-stage>
+              <div class="fleet-copy">
+                <div class="project-eyebrow"><span>Agent infrastructure in Go</span></div>
+                <h3>Fleetorch</h3>
+                <p class="project-summary">One supervisor to run parallel coding agents without shared-state collisions</p>
+                <p class="project-description">A cross-platform command center for concurrent agents. Separate Git worktrees, native terminals, and live sessions you can attach to anytime.</p>
+                <a class="text-link" href="https://github.com/msnotfound/fleetorch" target="_blank" rel="noreferrer">
+                  Explore the source
+                  <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+                </a>
+              </div>
+              <div class="fleet-console" data-fleet-console>
+                <div class="architecture-tabs" role="tablist" aria-label="Fleetorch architecture">
+                  <button type="button" role="tab" id="architecture-tab-0" aria-controls="architecture-panel-0" aria-selected="true" tabindex="0" data-architecture-tab="0" data-text="Isolate"><span>Isolate</span></button>
+                  <button type="button" role="tab" id="architecture-tab-1" aria-controls="architecture-panel-1" aria-selected="false" tabindex="-1" data-architecture-tab="1" data-text="Execute"><span>Execute</span></button>
+                  <button type="button" role="tab" id="architecture-tab-2" aria-controls="architecture-panel-2" aria-selected="false" tabindex="-1" data-architecture-tab="2" data-text="Inspect"><span>Inspect</span></button>
+                  <span class="tab-marker" aria-hidden="true"></span>
+                </div>
+                <div class="sequence-progress" aria-hidden="true"><span></span></div>
+
+                <div class="architecture-vitrine" data-architecture-vitrine>
+                  <div class="vitrine-header"><span>Inside Fleetorch</span><span data-chapter-number>01 / 03</span></div>
+                  <div class="architecture-panels">
+                    <div class="architecture-track">
+                      <article class="architecture-panel" role="tabpanel" id="architecture-panel-0" aria-labelledby="architecture-tab-0" data-architecture-panel="0">
+                        <div class="branch-diagram" aria-label="One repository branches into three isolated worktrees">
+                          <div class="repo-node"><span class="node-symbol">/</span><span>Repository<strong>Single clean origin</strong></span></div>
+                          <div class="branch-lines" aria-hidden="true"><span></span><span></span><span></span></div>
+                          <div class="branch-nodes"><div><span>worktree-01</span><strong>Agent A</strong></div><div><span>worktree-02</span><strong>Agent B</strong></div><div><span>worktree-03</span><strong>Agent C</strong></div></div>
+                        </div>
+                        <div class="architecture-caption"><h4>Give each agent its own filesystem</h4><p>Git worktrees keep concurrent changes separated. The supervisor owns process lifecycle while the repository stays clean and reviewable.</p></div>
+                      </article>
+                      <article class="architecture-panel" role="tabpanel" id="architecture-panel-1" aria-labelledby="architecture-tab-1" data-architecture-panel="1" hidden>
+                        <div class="execution-diagram">
+                          <span class="code-label">Command example</span>
+                          <code><span>$</span> fleetorch spawn codex<br />&nbsp; refactor-auth<br />&nbsp; “Refactor AuthMiddleware”<br />&nbsp; --repo .</code>
+                          <div class="execution-flow"><span>TOML plugin</span><span>Supervisor</span><strong>PTY process</strong></div>
+                        </div>
+                        <div class="architecture-caption"><h4>Native process, native terminal</h4><p>Agent definitions live in declarative TOML files. PTY-backed execution preserves full interactive CLI behavior on Unix and Windows.</p></div>
+                      </article>
+                      <article class="architecture-panel" role="tabpanel" id="architecture-panel-2" aria-labelledby="architecture-tab-2" data-architecture-panel="2" hidden>
+                        <div class="inspect-diagram"><span class="code-label">Inspection commands</span><code>$ fleetorch list<br /><span>$ fleetorch attach refactor-auth</span><br />$ fleetorch logs refactor-auth</code><div class="stream-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
+                        <div class="architecture-caption"><h4>Stay close to running work</h4><p>Attach to an active session, stream its output, or detach without stopping the agent. Multiple clients can observe the same terminal.</p></div>
+                      </article>
+                    </div>
+                  </div>
+                  <div class="vitrine-footer">
+                    <span>Architecture study</span>
+                    <a href="https://github.com/msnotfound/fleetorch#install" target="_blank" rel="noreferrer">
+                      Installation
+                      <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stepped Seam into Iconic Cobalt Mnemium Chapter -->
+        <div class="pixel-seam pixel-seam--to-cobalt" aria-hidden="true">
+          <svg viewBox="0 0 1440 36" preserveAspectRatio="none"><path fill="currentColor" d="M0 18h324v18H0zM324 0h36v36h-36zM360 18h576v18H360zM936 0h72v36h-72zM1008 18h432v18h-432z"/></svg>
+        </div>
+
+        <!-- FLAGSHIP DEEP DIVE 02: Mnemium -->
+        <section class="memory-section" aria-labelledby="memory-title">
+          <div class="memory-copy">
+            <div class="project-eyebrow"><span>Local AI, persistent memory</span></div>
+            <h2 id="memory-title">Mnemium</h2>
+            <p class="memory-deck">Keep useful working context alive after the chat ends</p>
+            <p>Capture context across AI tools, distill it into typed memories, and retrieve it locally through dense embeddings and lexical search.</p>
+            <a class="text-link" href="https://github.com/msnotfound/mnemium" target="_blank" rel="noreferrer">
+              Inside Mnemium
+              <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+            </a>
+          </div>
+          <figure class="memory-figure" data-media-parallax>
+            <a class="memory-image-frame" href="./assets/mnemium.webp" aria-label="Open the Mnemium architecture illustration at full size">
+              <img src="./assets/mnemium.webp" width="1200" height="840" alt="Mnemium architecture: captured context is distilled into typed local memory and queried through dense and lexical retrieval." loading="lazy" />
+            </a>
+            <figcaption><span>Capture, distill, retrieve</span><span>Implementation study</span></figcaption>
+          </figure>
+        </section>
+
+        <div class="pixel-seam pixel-seam--from-cobalt" aria-hidden="true">
+          <svg viewBox="0 0 1440 36" preserveAspectRatio="none"><path fill="currentColor" d="M0 18h144v18H0zM144 0h72v36h-72zM216 18h648v18H216zM864 0h36v36h-36zM900 18h540v18H900z"/></svg>
+        </div>
+
+        <!-- ==============================================================
+             SWAPPABLE SLOT 1: CRAFT & CAPABILITIES (matrix | axioms)
+             Only ONE mounts per visit — zero repetition of principles/stack
+             ============================================================== -->
+        <div class="slot-craft" id="craft-lens">
+          <div class="pixel-seam pixel-seam--to-acid" aria-hidden="true">
+            <svg viewBox="0 0 1440 36" preserveAspectRatio="none"><path fill="currentColor" d="M0 18h144v18H0zM144 0h36v36h-36zM180 18h108v18H180zM288 0h72v36h-72zM360 18h468v18H360zM828 0h36v36h-36zM864 18h252v18H864zM1116 0h72v36h-72zM1188 18h144v18h-144zM1332 0h36v36h-36zM1368 18h72v18h-72z"/></svg>
+          </div>
+
+          <!-- Variant B1: 6-Cell Operating Range Matrix -->
+          <section class="capability-band" data-variant-craft="matrix" aria-labelledby="range-title">
+            <header class="chapter-heading">
+              <span class="section-label">Operating range</span>
+              <h2 id="range-title">Across the systems<br /><em>and AI stack</em></h2>
+              <p class="chapter-aside">Click any capability tile to lock focus. Every track is backed by shipped source code below.</p>
+            </header>
+
+            <div class="capability-grid">
+              <button type="button" class="cap-tile is-selected" data-cap-tile aria-pressed="true">
+                <span class="cap-tile-top"><span>01</span><span class="cap-tile-dash"></span></span>
+                <h3>Agent runtimes</h3>
+                <p>Multi-agent supervisors with OS-level process isolation, PTY multiplexing, and clean session teardown.</p>
+                <div class="cap-tags"><span>Go</span><span>PTY</span><span>Worktrees</span><span>TOML</span></div>
+              </button>
+              <button type="button" class="cap-tile" data-cap-tile aria-pressed="false">
+                <span class="cap-tile-top"><span>02</span><span class="cap-tile-dash"></span></span>
+                <h3>Local memory</h3>
+                <p>Persistent context capture distilled into typed SQLite memory with dense embeddings and lexical search.</p>
+                <div class="cap-tags"><span>SQLite</span><span>FTS5</span><span>Embeddings</span><span>Hybrid</span></div>
+              </button>
+              <button type="button" class="cap-tile" data-cap-tile aria-pressed="false">
+                <span class="cap-tile-top"><span>03</span><span class="cap-tile-dash"></span></span>
+                <h3>Desktop automation</h3>
+                <p>Compiling demonstrated Linux GUI workflows into parameterized AST graphs replayed via accessibility trees.</p>
+                <div class="cap-tags"><span>X11</span><span>Wayland</span><span>AT-SPI</span><span>AST</span></div>
+              </button>
+              <button type="button" class="cap-tile" data-cap-tile aria-pressed="false">
+                <span class="cap-tile-top"><span>04</span><span class="cap-tile-dash"></span></span>
+                <h3>Semantic graphs</h3>
+                <p>Coordinate-free workbook indexing and supplier provenance DAGs that survive structural mutations.</p>
+                <div class="cap-tags"><span>DAGs</span><span>Provenance</span><span>Formulas</span><span>Python</span></div>
+              </button>
+              <button type="button" class="cap-tile" data-cap-tile aria-pressed="false">
+                <span class="cap-tile-top"><span>05</span><span class="cap-tile-dash"></span></span>
+                <h3>Event vision</h3>
+                <p>CPU-first Rust time-surface ingestion pipelines exploring max-plus tropical algebra for motion estimation.</p>
+                <div class="cap-tags"><span>Rust</span><span>Python FFI</span><span>Tropical</span><span>SIMD</span></div>
+              </button>
+              <button type="button" class="cap-tile" data-cap-tile aria-pressed="false">
+                <span class="cap-tile-top"><span>06</span><span class="cap-tile-dash"></span></span>
+                <h3>Verifiable signals</h3>
+                <p>Cryptographic commitment and reveal schemes for auditing agent-generated outputs and tool claims.</p>
+                <div class="cap-tags"><span>Commit-Reveal</span><span>ZK</span><span>TypeScript</span><span>Audit</span></div>
+              </button>
+            </div>
+          </section>
+
+          <!-- Variant B2: Systems Axioms & Interactive Tradeoff Ledger -->
+          <section class="capability-band" data-variant-craft="axioms" aria-labelledby="axioms-title">
+            <header class="chapter-heading">
+              <span class="section-label">Working axioms</span>
+              <h2 id="axioms-title">Question the premise,<br /><em>then build the proof</em></h2>
+              <p class="chapter-aside">Click any axiom to inspect the engineering tradeoff it enforces in production code.</p>
+            </header>
+
+            <div class="axiom-ledger">
+              <button type="button" class="axiom-card is-selected" data-axiom-card aria-pressed="true">
+                <span class="cap-tile-top"><span>01</span><span class="cap-tile-dash"></span></span>
+                <h3>Follow the constraint</h3>
+                <p>Latency, local execution, cost, and process isolation shape the architecture up front instead of sitting in a footnote.</p>
+                <div class="axiom-proof">
+                  <strong>Enforced in Fleetorch</strong>
+                  Isolated Git worktrees over shared working directories — zero merge clobbering across parallel agents.
+                </div>
+              </button>
+              <button type="button" class="axiom-card" data-axiom-card aria-pressed="false">
+                <span class="cap-tile-top"><span>02</span><span class="cap-tile-dash"></span></span>
+                <h3>Make state inspectable</h3>
+                <p>Readable interfaces, observable process output, and verifiable cryptographic receipts kept close to the runtime.</p>
+                <div class="axiom-proof">
+                  <strong>Enforced in Mnemium &amp; GhostSignal</strong>
+                  Typed local SQLite memory + commit-reveal traces instead of opaque cloud prompt black boxes.
+                </div>
+              </button>
+              <button type="button" class="axiom-card" data-axiom-card aria-pressed="false">
+                <span class="cap-tile-top"><span>03</span><span class="cap-tile-dash"></span></span>
+                <h3>Benchmark first</h3>
+                <p>Build a deterministic reference, test every heuristic against it, and follow the measurement even when it changes direction.</p>
+                <div class="axiom-proof">
+                  <strong>Enforced in Phantom &amp; TropiCam</strong>
+                  Native AT-SPI AST replay &amp; CPU-first Rust time-surfaces beat brute-force vision loops on latency.
+                </div>
+              </button>
+            </div>
+          </section>
+
+          <div class="pixel-seam pixel-seam--from-acid" aria-hidden="true">
+            <svg viewBox="0 0 1440 36" preserveAspectRatio="none"><path fill="currentColor" d="M0 18h216v18H0zM216 0h72v36h-72zM288 18h360v18H288zM648 0h36v36h-36zM684 18h396v18H684zM1080 0h72v36h-72zM1152 18h288v18h-288z"/></svg>
+          </div>
+        </div>
+
+        <!-- ==============================================================
+             SWAPPABLE SLOT 2: WORK EXPLORER (folders | ledger | inspector)
+             Only ONE mounts per visit — ZERO duplicate project lists!
+             ============================================================== -->
+        <div class="slot-work" id="work-explorer">
+          <!-- Variant A1: Tactile 3-Folder Work Archive -->
+          <section class="folder-archive-section" data-variant-work="folders" aria-labelledby="folders-title">
+            <header class="chapter-heading">
+              <span class="section-label">Selected archive</span>
+              <h2 id="folders-title">Three folders, three<br /><em>chapters of the work</em></h2>
+              <p class="chapter-aside">Open any folder below to inspect shipped builds, public open-source repositories, and runtime utilities.</p>
+            </header>
+
+            <div class="folder-deck" role="tablist" aria-label="Work archive folders">
+              <button type="button" class="folder-card is-open" data-folder-trigger="systems" aria-expanded="true">
+                <span class="folder-visual" aria-hidden="true">
+                  <span class="folder-tab"></span>
+                  <span class="folder-back"></span>
+                  <span class="folder-sheet folder-sheet--1"></span>
+                  <span class="folder-sheet folder-sheet--2"></span>
+                  <span class="folder-front"></span>
+                </span>
+                <strong>Core Systems</strong>
+                <small>4 builds</small>
+              </button>
+
+              <button type="button" class="folder-card" data-folder-trigger="oss" aria-expanded="false">
+                <span class="folder-visual" aria-hidden="true">
+                  <span class="folder-tab"></span>
+                  <span class="folder-back"></span>
+                  <span class="folder-sheet folder-sheet--1"></span>
+                  <span class="folder-sheet folder-sheet--2"></span>
+                  <span class="folder-front"></span>
+                </span>
+                <strong>Open Source</strong>
+                <small>4 repositories</small>
+              </button>
+
+              <button type="button" class="folder-card" data-folder-trigger="domains" aria-expanded="false">
+                <span class="folder-visual" aria-hidden="true">
+                  <span class="folder-tab"></span>
+                  <span class="folder-back"></span>
+                  <span class="folder-sheet folder-sheet--1"></span>
+                  <span class="folder-sheet folder-sheet--2"></span>
+                  <span class="folder-front"></span>
+                </span>
+                <strong>Risk &amp; Trust</strong>
+                <small>2 architectures</small>
+              </button>
+            </div>
+
+            <div class="folder-drawer">
+              <div class="folder-panel" data-folder-panel="systems">
+                <a class="folder-file-row" href="https://github.com/msnotfound/fleetorch" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">Fleetorch</span>
+                  <span class="folder-file-desc">Cross-platform Go supervisor for parallel coding agents in isolated Git worktrees</span>
+                  <span class="folder-file-meta">Go / PTY</span>
+                </a>
+                <a class="folder-file-row" href="https://github.com/msnotfound/mnemium" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">Mnemium</span>
+                  <span class="folder-file-desc">Local-first Chrome &amp; SQLite memory engine with dense + lexical retrieval</span>
+                  <span class="folder-file-meta">Local AI</span>
+                </a>
+                <a class="folder-file-row" href="https://github.com/msnotfound/syntra" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">Syntra</span>
+                  <span class="folder-file-desc">Supply-chain provenance graph, supplier risk alerts, and decision traces</span>
+                  <span class="folder-file-meta">Risk Graph</span>
+                </a>
+                <a class="folder-file-row" href="https://github.com/msnotfound/ghostsignal" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">GhostSignal</span>
+                  <span class="folder-file-desc">Zero-knowledge commit-reveal accountability layer for agent-generated signals</span>
+                  <span class="folder-file-meta">ZK Proofs</span>
+                </a>
+              </div>
+
+              <div class="folder-panel" data-folder-panel="oss" hidden>
+                <a class="folder-file-row" href="https://github.com/msnotfound/Draftdeckai" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">Draftdeckai</span>
+                  <span class="folder-file-desc">Open-source AI presentation &amp; document generation studio</span>
+                  <span class="folder-file-meta">TypeScript · 79 stars</span>
+                </a>
+                <a class="folder-file-row" href="https://github.com/msnotfound/hookguard" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">HookGuard</span>
+                  <span class="folder-file-desc">Webhook validation and runtime guardrails for automated workflows</span>
+                  <span class="folder-file-meta">JavaScript</span>
+                </a>
+                <a class="folder-file-row" href="https://github.com/msnotfound/DocMagicMaya" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">DocMagicMaya</span>
+                  <span class="folder-file-desc">Structured generation for resumes, decks, letters, and technical docs</span>
+                  <span class="folder-file-meta">TypeScript</span>
+                </a>
+                <a class="folder-file-row" href="https://github.com/msnotfound/RetroShare" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">RetroShare</span>
+                  <span class="folder-file-desc">Retro-styled peer-to-peer file sharing interface</span>
+                  <span class="folder-file-meta">Web / P2P</span>
+                </a>
+              </div>
+
+              <div class="folder-panel" data-folder-panel="domains" hidden>
+                <a class="folder-file-row" href="https://github.com/msnotfound/syntra" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">Syntra Provenance DAG</span>
+                  <span class="folder-file-desc">Multi-tier supplier graph with blast-radius propagation and auditable alert trails</span>
+                  <span class="folder-file-meta">Graph / Alerts</span>
+                </a>
+                <a class="folder-file-row" href="https://github.com/msnotfound/ghostsignal" target="_blank" rel="noreferrer">
+                  <span class="folder-file-name">GhostSignal Protocol</span>
+                  <span class="folder-file-desc">Timestamped cryptographic commitments that prove signal integrity without leaking alpha</span>
+                  <span class="folder-file-meta">Commit-Reveal</span>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Variant A2: Oversized Editorial Ledger + Floating Plate Preview -->
+          <section class="work-section secondary-work" data-variant-work="ledger" aria-labelledby="work-title">
+            <span class="section-label">Selected index</span>
+            <h2 id="work-title">Four systems across<br /><em>different problem domains</em></h2>
+            <div class="work-list" data-work-list>
+              <a href="https://github.com/msnotfound/fleetorch" target="_blank" rel="noreferrer" data-preview-title="Fleetorch" data-preview-meta="Go, agent infrastructure" data-preview-copy="PTY-backed execution, isolated worktrees, and live inspection." data-preview-variant="fleetorch">
+                <span>01</span><strong>Fleetorch</strong><small>Parallel coding agent orchestration</small>
+                <svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+              </a>
+              <a href="https://github.com/msnotfound/mnemium" target="_blank" rel="noreferrer" data-preview-title="Mnemium" data-preview-meta="Local AI memory" data-preview-copy="Typed memories with local distillation and hybrid retrieval." data-preview-variant="phantom">
+                <span>02</span><strong>Mnemium</strong><small>Persistent local context engine</small>
+                <svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+              </a>
+              <a href="https://github.com/msnotfound/syntra" target="_blank" rel="noreferrer" data-preview-title="Syntra" data-preview-meta="Risk and provenance" data-preview-copy="Supplier relationships, provenance graphs, alerts, and decisions." data-preview-variant="ghostsignal">
+                <span>03</span><strong>Syntra</strong><small>Supply-chain provenance &amp; risk</small>
+                <svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+              </a>
+              <a href="https://github.com/msnotfound/ghostsignal" target="_blank" rel="noreferrer" data-preview-title="GhostSignal" data-preview-meta="ZK commitments" data-preview-copy="Commitment and reveal mechanisms for agent-generated signals." data-preview-variant="sahayak">
+                <span>04</span><strong>GhostSignal</strong><small>Verifiable commit-reveal signals</small>
+                <svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+              </a>
+            </div>
+            <div class="ledger-oss-strip">
+              <span>Also shipped in open source:</span>
+              <a href="https://github.com/msnotfound/Draftdeckai" target="_blank" rel="noreferrer">Draftdeckai · 79★</a>
+              <a href="https://github.com/msnotfound/hookguard" target="_blank" rel="noreferrer">HookGuard</a>
+              <a href="https://github.com/msnotfound/DocMagicMaya" target="_blank" rel="noreferrer">DocMagicMaya</a>
+              <a href="https://github.com/msnotfound/RetroShare" target="_blank" rel="noreferrer">RetroShare</a>
+            </div>
+          </section>
+
+          <!-- Variant A3: Split-Pane Interactive System Inspector Bench -->
+          <section class="inspector-section" data-variant-work="inspector" aria-labelledby="inspector-title">
+            <header class="chapter-heading">
+              <span class="section-label">System workbench</span>
+              <h2 id="inspector-title">Inspect the runtime<br /><em>architecture directly</em></h2>
+              <p class="chapter-aside">Select any shipped build on the left to inspect its core constraint, runtime primitive, and source repository.</p>
+            </header>
+
+            <div class="inspector-bench">
+              <div class="inspector-rail" role="tablist" aria-label="Systems dossier">
+                <button type="button" class="inspector-tab is-selected" role="tab" aria-selected="true" data-inspector-tab="syntra">
+                  <strong>Syntra</strong><small>Risk DAG</small>
+                </button>
+                <button type="button" class="inspector-tab" role="tab" aria-selected="false" data-inspector-tab="ghostsignal">
+                  <strong>GhostSignal</strong><small>ZK Commit</small>
+                </button>
+                <button type="button" class="inspector-tab" role="tab" aria-selected="false" data-inspector-tab="draftdeck">
+                  <strong>Draftdeckai</strong><small>79 stars · TS</small>
+                </button>
+                <button type="button" class="inspector-tab" role="tab" aria-selected="false" data-inspector-tab="fleetorch">
+                  <strong>Fleetorch</strong><small>Go / PTY</small>
+                </button>
+                <button type="button" class="inspector-tab" role="tab" aria-selected="false" data-inspector-tab="hookguard">
+                  <strong>HookGuard</strong><small>Guardrails</small>
+                </button>
+              </div>
+
+              <div class="inspector-stage">
+                <article class="inspector-panel" data-inspector-panel="syntra">
+                  <figure class="inspector-media"><img src="./assets/syntra.webp" width="1200" height="840" alt="Syntra supply-chain provenance graph interface" loading="lazy" /></figure>
+                  <h3>Syntra</h3>
+                  <p>Models multi-tier supplier relationships as an explicit provenance graph so disruption alerts, blast-radius analysis, and mitigation decisions stay traceable.</p>
+                  <div class="inspector-meta-grid">
+                    <div><span>Primary invariant</span><strong>Auditable supplier dependency lineage</strong></div>
+                    <div><span>Domain focus</span><strong>Risk graphs, alerts &amp; decision traces</strong></div>
+                  </div>
+                  <a class="text-link" href="https://github.com/msnotfound/syntra" target="_blank" rel="noreferrer">Open Syntra repository <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </article>
+
+                <article class="inspector-panel" data-inspector-panel="ghostsignal" hidden>
+                  <figure class="inspector-media"><img src="./assets/ghostsignal.webp" width="1200" height="840" alt="GhostSignal commit-reveal cryptographic architecture" loading="lazy" /></figure>
+                  <h3>GhostSignal</h3>
+                  <p>Commitment and reveal protocol for verifying autonomous agent predictions and signals after the fact without exposing proprietary inputs ahead of time.</p>
+                  <div class="inspector-meta-grid">
+                    <div><span>Primary invariant</span><strong>Non-repudiable timestamped commitments</strong></div>
+                    <div><span>Domain focus</span><strong>Zero-knowledge accountability &amp; audits</strong></div>
+                  </div>
+                  <a class="text-link" href="https://github.com/msnotfound/ghostsignal" target="_blank" rel="noreferrer">Open GhostSignal repository <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </article>
+
+                <article class="inspector-panel" data-inspector-panel="draftdeck" hidden>
+                  <h3>Draftdeckai</h3>
+                  <p>Open-source AI presentation and structured document generation studio with 79 GitHub stars, built in TypeScript for rapid layout drafting and export.</p>
+                  <div class="inspector-meta-grid">
+                    <div><span>Community adoption</span><strong>79 public stars on GitHub</strong></div>
+                    <div><span>Stack</span><strong>TypeScript, structured generation pipelines</strong></div>
+                  </div>
+                  <a class="text-link" href="https://github.com/msnotfound/Draftdeckai" target="_blank" rel="noreferrer">Open Draftdeckai repository <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </article>
+
+                <article class="inspector-panel" data-inspector-panel="fleetorch" hidden>
+                  <figure class="inspector-media"><img src="./assets/fleetorch.webp" width="1200" height="840" alt="Fleetorch parallel agent supervisor diagram" loading="lazy" /></figure>
+                  <h3>Fleetorch</h3>
+                  <p>Cross-platform Go supervisor giving every parallel coding agent an isolated Git worktree and attachable native PTY session.</p>
+                  <div class="inspector-meta-grid">
+                    <div><span>Primary invariant</span><strong>Zero cross-agent filesystem contention</strong></div>
+                    <div><span>Stack</span><strong>Go, Git worktrees, native PTY, TOML</strong></div>
+                  </div>
+                  <a class="text-link" href="https://github.com/msnotfound/fleetorch" target="_blank" rel="noreferrer">Open Fleetorch repository <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </article>
+
+                <article class="inspector-panel" data-inspector-panel="hookguard" hidden>
+                  <h3>HookGuard</h3>
+                  <p>Lightweight webhook signature verification and payload guardrail middleware built to harden automated pipelines against spoofed or malformed triggers.</p>
+                  <div class="inspector-meta-grid">
+                    <div><span>Primary invariant</span><strong>Fail-closed inbound webhook verification</strong></div>
+                    <div><span>Companion repos</span><strong>DocMagicMaya · RetroShare</strong></div>
+                  </div>
+                  <a class="text-link" href="https://github.com/msnotfound/hookguard" target="_blank" rel="noreferrer">Open HookGuard repository <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>
+                </article>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="work-preview" data-work-preview aria-hidden="true">
+          <div class="work-preview-track" data-work-preview-track>
+            <article class="work-preview-card"><img src="./assets/fleetorch.webp" alt="" width="1200" height="840" /><p>Go, agent infrastructure</p><h3>Fleetorch</h3><span>PTY-backed execution, isolated worktrees, and live inspection.</span></article>
+            <article class="work-preview-card"><img src="./assets/mnemium.webp" alt="" width="1200" height="840" /><p>Local AI memory</p><h3>Mnemium</h3><span>Typed memories with local distillation and hybrid retrieval.</span></article>
+            <article class="work-preview-card"><img src="./assets/syntra.webp" alt="" width="1200" height="840" /><p>Risk and provenance</p><h3>Syntra</h3><span>Supplier relationships, provenance graphs, alerts, and decisions.</span></article>
+            <article class="work-preview-card"><img src="./assets/ghostsignal.webp" alt="" width="1200" height="840" /><p>ZK commitments</p><h3>GhostSignal</h3><span>Commitment and reveal mechanisms for agent-generated signals.</span></article>
+          </div>
+        </aside>
+
+        <!-- DEDICATED RESEARCH SHELF (Never duplicated in work slot above) -->
+        <section class="research-section research-shelf" id="research-engineering" aria-labelledby="research-title">
+          <header class="chapter-heading">
+            <span class="section-label">Applied research</span>
+            <h2 id="research-title">Prototypes &amp; technical<br /><em>manuscripts</em></h2>
+            <p class="chapter-aside">Active investigation across desktop automation, semantic workbook graphs, and event-camera vision.</p>
+          </header>
+          <div class="research-sheets">
+            <article class="research-sheet" data-research-sheet>
+              <div class="sheet-topline"><span>Desktop automation</span><span>X11 / Wayland</span></div>
+              <h3>Phantom</h3>
+              <p class="sheet-deck">Compile demonstrated Linux workflows into replayable execution graphs</p>
+              <div class="research-process" aria-hidden="true"><span>Observe</span><span>Compile AST</span><strong>Native replay</strong></div>
+              <p>Turns demonstrated desktop tasks into parameterized graphs that replay locally through OS accessibility trees, falling back to an agent only when recovery is needed.</p>
+              <a class="text-link" href="./papers/phantom.md" download>Download manuscript (.md)</a>
+            </article>
+            <article class="research-sheet" data-research-sheet>
+              <div class="sheet-topline"><span>Spreadsheet AI</span><span>Semantic graphs</span></div>
+              <h3>SAN / SWG</h3>
+              <p class="sheet-deck">Coordinate-free table resolution that preserves semantic identity</p>
+              <div class="research-process" aria-hidden="true"><span>Workbook</span><span>Semantic map</span><strong>Dependency trace</strong></div>
+              <p>A semantic workbook graph for finding tables and artifacts by meaning, tracking identity across structural sheet edits, and tracing formula dependencies.</p>
+              <a class="text-link" href="./papers/san-swg.md" download>Download manuscript (.md)</a>
+            </article>
+            <article class="research-sheet" data-research-sheet>
+              <div class="sheet-topline"><span>Neuromorphic vision</span><span>Rust + Python</span></div>
+              <h3>TropiCam</h3>
+              <p class="sheet-deck">Max-plus tropical algebra for event-camera motion estimation</p>
+              <div class="event-surface" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              <p>A CPU-first Rust time-surface ingestion core with Python C-bindings and synthetic reference test coverage for non-linear sensor motion modeling.</p>
+              <a class="text-link" href="https://github.com/msnotfound/tropicam" target="_blank" rel="noreferrer">
+                View TropiCam repository
+                <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+              </a>
+            </article>
+          </div>
+        </section>
+
+        <!-- ==============================================================
+             SWAPPABLE SLOT 3: LIVE GITHUB TELEMETRY (heatmap | cadence)
+             ============================================================== -->
+        <div class="slot-telemetry" id="github-activity">
+          <!-- Variant C1: 53-Week Contribution Heatmap -->
+          <section class="activity-section" data-variant-telemetry="heatmap" aria-labelledby="activity-title">
+            <header class="chapter-heading">
+              <span class="section-label">Open-source cadence</span>
+              <h2 id="activity-title">Real shipping history<br /><em>on GitHub</em></h2>
+              <p class="chapter-aside">Synced directly from @msnotfound’s public contribution graph across the past 53 weeks.</p>
+            </header>
+
+            <div class="activity-shell">
+              <div class="activity-topbar">
+                <span class="activity-headline"><strong data-gh-total>377</strong> contributions in the last year — github.com/msnotfound</span>
+                <span class="activity-clock">India · <time data-ist-clock>--:--:-- IST</time></span>
+              </div>
+
+              <div class="gh-scroller">
+                <div class="gh-months" data-gh-months aria-hidden="true"></div>
+                <div class="gh-grid" data-gh-grid role="img" aria-label="53-week GitHub contribution heatmap for msnotfound"></div>
+              </div>
+
+              <div class="gh-foot">
+                <span data-gh-tooltip>Hover any square to inspect daily commit volume</span>
+                <span class="gh-legend" aria-hidden="true">
+                  Less
+                  <i class="gh-day"></i>
+                  <i class="gh-lvl-1"></i>
+                  <i class="gh-lvl-2"></i>
+                  <i class="gh-lvl-3"></i>
+                  <i class="gh-lvl-4"></i>
+                  More
+                </span>
+              </div>
+
+              <div class="activity-kpis">
+                <div class="activity-kpi"><strong data-gh-active-days>43</strong><span>Active shipping days</span></div>
+                <div class="activity-kpi"><strong data-gh-streak>6d</strong><span>Longest streak</span></div>
+                <div class="activity-kpi"><strong data-gh-busiest-day>122</strong><span data-gh-busiest-day-label>Busiest day</span></div>
+                <div class="activity-kpi"><strong data-gh-busiest-month>232</strong><span data-gh-busiest-month-label>Peak month</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Variant C2: 12-Month Shipping Cadence Bar Chart -->
+          <section class="activity-section" data-variant-telemetry="cadence" aria-labelledby="cadence-title">
+            <header class="chapter-heading">
+              <span class="section-label">Shipping telemetry</span>
+              <h2 id="cadence-title">Twelve months of<br /><em>public commits</em></h2>
+              <p class="chapter-aside">Monthly velocity aggregated from @msnotfound’s live GitHub GraphQL calendar. Inspect any bar below.</p>
+            </header>
+
+            <div class="activity-shell">
+              <div class="activity-topbar">
+                <span class="activity-headline"><strong data-gh-total>377</strong> contributions across 12 months — github.com/msnotfound</span>
+                <span class="activity-clock">India · <time data-ist-clock>--:--:-- IST</time></span>
+              </div>
+
+              <div class="cadence-bars" data-cadence-bars role="group" aria-label="Monthly GitHub contribution volume"></div>
+
+              <div class="gh-foot">
+                <span data-cadence-readout>Hover or click any month bar to inspect shipping volume</span>
+              </div>
+
+              <div class="activity-kpis">
+                <div class="activity-kpi"><strong data-gh-active-days>43</strong><span>Active shipping days</span></div>
+                <div class="activity-kpi"><strong data-gh-streak>6d</strong><span>Longest streak</span></div>
+                <div class="activity-kpi"><strong data-gh-busiest-day>122</strong><span data-gh-busiest-day-label>Busiest day</span></div>
+                <div class="activity-kpi"><strong data-gh-busiest-month>232</strong><span data-gh-busiest-month-label>Peak month</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="notebook-gates" id="more-from-mayank" aria-label="More from Mayank">
+          <a class="notebook-gate gate-feed" href="https://github.com/msnotfound?tab=repositories" target="_blank" rel="noreferrer">
+            <span class="section-label">Between releases</span>
+            <strong>Open-source<br /><em>Repositories</em></strong>
+            <span>Active builds &amp; commits <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></span>
+            <span class="gate-type" aria-hidden="true">/code</span>
+          </a>
+          <a class="notebook-gate gate-notes" href="./papers/phantom.md" download>
+            <span class="section-label">Behind the decisions</span>
+            <strong>Technical<br /><em>Manuscripts</em></strong>
+            <span>Architecture notes &amp; papers</span>
+            <span class="gate-type" aria-hidden="true">/notes</span>
+          </a>
+        </section>
+
+        <footer class="contact-section" id="contact">
+          <span class="section-label">Direct contact</span>
+          <h2>Have a system in mind?<br /><em>Let’s build the proof</em></h2>
+
+          <div class="main-contact-dispatch">
+            <div class="dispatch-card">
+              <div>
+                <span class="dispatch-kicker">Primary inbox</span>
+                <div class="dispatch-title">hello@mayanksahu.dev</div>
+                <p class="dispatch-desc">Direct line for systems engineering, agent orchestration, and focused contract builds.</p>
+              </div>
+              <button id="main-copy-email" class="dispatch-btn dispatch-btn--secondary" type="button" data-swapped="false">
+                <span class="icon-swap" aria-hidden="true">
+                  <svg class="icon-a" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                  <svg class="icon-b" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>
+                </span>
+                <span data-copy-label>Copy email address</span>
+              </button>
+            </div>
+
+            <div class="dispatch-card">
+              <div>
+                <span class="dispatch-kicker">Project brief</span>
+                <div class="dispatch-title">Start a conversation</div>
+                <p class="dispatch-desc">Send project constraints, timeline, or schedule a technical walkthrough.</p>
+              </div>
+              <a href="./contact/index.html" class="dispatch-btn dispatch-btn--primary">
+                Open contact page
+              </a>
+            </div>
+          </div>
+
+          <div class="contact-links">
+            <a class="text-link" href="https://github.com/msnotfound" target="_blank" rel="noreferrer">
+              GitHub
+              <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg>
+            </a>
+            <a class="text-link" href="mailto:hello@mayanksahu.dev">Launch mail client</a>
+            <a class="text-link" href="#selected-systems">Back to systems</a>
+          </div>
+
+          <div class="footer-colophon">
+            <span>Mayank Sahu, 2026 — AI systems &amp; applied research, India (<time data-ist-clock>IST</time>)</span>
+            <div class="footer-colophon-right">
+              <a href="#top">Back to top</a>
+            </div>
+          </div>
+        </footer>
       </div>
 
-      <!-- Direct Reach Links -->
-      <div class="flex flex-wrap items-center justify-center gap-6 mt-8 text-xs font-mono text-slate-400">
-        <a href="mailto:108mayanksahu@gmail.com" class="hover:text-indigo-400 transition">✉ 108mayanksahu@gmail.com</a>
-        <span>•</span>
-        <a href="https://github.com/msnotfound" target="_blank" class="hover:text-indigo-400 transition">💻 github.com/msnotfound</a>
-        <span>•</span>
-        <span>📍 Remote Worldwide</span>
+      <!-- ==============================================================
+           REVEAL LAYER (Runtime Invariants — Mirrored Across Every Slot)
+           ============================================================== -->
+      <div class="layer layer--reveal js-masker" data-reveal-flood aria-hidden="true">
+        <div class="mask-stage">
+          <div class="hero-stack">
+            <section class="hero hero-base">
+              <div class="hero-copy">
+                <p class="kicker">Mayank Sahu — Runtime invariants</p>
+                <h2>
+                  <span class="line-wrap"><span>Stress-tested against chaos</span></span>
+                  <span class="line-wrap"><span><em>so they never buckle</em></span></span>
+                  <span class="line-wrap"><span>under production load</span></span>
+                </h2>
+              </div>
+            </section>
+
+            <div class="hero-grid">
+              <p>
+                Deterministic runtimes, bounded local memory, and verifiable execution with zero synthetic shortcuts.
+              </p>
+            </div>
+
+            <nav class="hero-actions">
+              <span class="magnetic-link primary-link">Inspect runtimes</span>
+              <span class="magnetic-link">GitHub</span>
+              <span class="magnetic-link">Contact</span>
+            </nav>
+          </div>
+
+          <div class="hero-scroll"><span class="scroll-stem" aria-hidden="true"></span> Runtime substrate below</div>
+        </div>
+
+        <div class="cursor-orbit" aria-hidden="true"></div>
+
+        <div class="passing-statement" aria-hidden="true">
+          <div class="statement-track">From raw constraints <em>to verified runtime</em></div>
+          <span class="statement-rule"></span>
+        </div>
+
+        <section class="flagship-section">
+          <header class="chapter-heading">
+            <span class="section-label">Substrate architecture</span>
+            <h2>Axioms hold fast,<br /><em>invariants stand true</em></h2>
+            <p class="chapter-aside">Infrastructure, local memory, and the interfaces between engineers and autonomous agents.</p>
+          </header>
+
+          <div class="fleet-sequence">
+            <div class="fleet-stage">
+              <div class="fleet-copy">
+                <div class="project-eyebrow"><span>Substrate runtime in Go</span></div>
+                <h3>Fleetorch</h3>
+                <p class="project-summary">Isolated Git worktrees paired with deterministic process supervision</p>
+                <p class="project-description">A cross-platform command center for concurrent agents. Separate Git worktrees, native terminals, and live sessions you can attach to anytime.</p>
+                <span class="text-link">Inspect source repository</span>
+              </div>
+              <div class="fleet-console">
+                <div class="reveal-tabs-mock">
+                  <span class="reveal-tab-mock">Isolate</span>
+                  <span class="reveal-tab-mock">Execute</span>
+                  <span class="reveal-tab-mock">Inspect</span>
+                </div>
+                <div class="sequence-progress" aria-hidden="true"><span style="transform: scaleX(1)"></span></div>
+
+                <div class="architecture-vitrine">
+                  <div class="vitrine-header"><span>Fleetorch Runtime</span><span>01 / 03</span></div>
+                  <div class="architecture-panels">
+                    <div class="architecture-track">
+                      <article class="architecture-panel">
+                        <div class="branch-diagram">
+                          <div class="repo-node"><span class="node-symbol">/</span><span>Bare repository<strong>Single source of truth</strong></span></div>
+                          <div class="branch-lines" aria-hidden="true"><span></span><span></span><span></span></div>
+                          <div class="branch-nodes"><div><span>worktree-01</span><strong>Agent A</strong></div><div><span>worktree-02</span><strong>Agent B</strong></div><div><span>worktree-03</span><strong>Agent C</strong></div></div>
+                        </div>
+                        <div class="architecture-caption"><h4>Enforce strict process isolation</h4><p>Separate file descriptors and worktrees prevent cross-talk while the Go supervisor enforces clean shutdowns.</p></div>
+                      </article>
+                    </div>
+                  </div>
+                  <div class="vitrine-footer"><span>Kernel specification</span><span>Source repository</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="memory-section">
+          <div class="memory-copy">
+            <div class="project-eyebrow"><span>Local state, zero cloud leaks</span></div>
+            <h2>Mnemium</h2>
+            <p class="memory-deck">Context windows reset while compacted local memory endures</p>
+            <p>Bounded SQLite vector tables, fast lexical filtering, and local distillation without shipping private context to third-party servers.</p>
+            <span class="text-link">Inspect memory engine</span>
+          </div>
+          <figure class="memory-figure" data-media-parallax>
+            <div class="memory-image-frame"><img src="./assets/mnemium.webp" width="1200" height="840" alt="" loading="lazy" /></div>
+            <figcaption><span>Compress, index, query</span><span>Storage engine profile</span></figcaption>
+          </figure>
+        </section>
+
+        <div class="slot-craft">
+          <section class="capability-band" data-variant-craft="matrix">
+            <header class="chapter-heading">
+              <span class="section-label">Runtime primitives</span>
+              <h2>Six layers of<br /><em>systems execution</em></h2>
+              <p class="chapter-aside">Explicit invariants across process supervisors, local storage engines, AST replay, and event sensors.</p>
+            </header>
+            <div class="capability-grid">
+              <div class="cap-tile"><span class="cap-tile-top"><span>01</span><span class="cap-tile-dash"></span></span><h3>Agent runtimes</h3><p>Isolated worktrees, PTY streams, deterministic teardown.</p></div>
+              <div class="cap-tile"><span class="cap-tile-top"><span>02</span><span class="cap-tile-dash"></span></span><h3>Local memory</h3><p>Bounded SQLite FTS5 + dense vector retrieval.</p></div>
+              <div class="cap-tile"><span class="cap-tile-top"><span>03</span><span class="cap-tile-dash"></span></span><h3>Desktop automation</h3><p>Accessibility-tree AST compilation and local replay.</p></div>
+              <div class="cap-tile"><span class="cap-tile-top"><span>04</span><span class="cap-tile-dash"></span></span><h3>Semantic graphs</h3><p>Coordinate-free dependency and provenance DAGs.</p></div>
+              <div class="cap-tile"><span class="cap-tile-top"><span>05</span><span class="cap-tile-dash"></span></span><h3>Event vision</h3><p>CPU-first Rust tropical algebra time-surface core.</p></div>
+              <div class="cap-tile"><span class="cap-tile-top"><span>06</span><span class="cap-tile-dash"></span></span><h3>Verifiable signals</h3><p>Zero-knowledge commit-reveal accountability schemes.</p></div>
+            </div>
+          </section>
+
+          <section class="capability-band" data-variant-craft="axioms">
+            <header class="chapter-heading">
+              <span class="section-label">Systems axioms</span>
+              <h2>Honor physical bounds,<br /><em>expose runtime state</em></h2>
+              <p class="chapter-aside">Verified engineering tradeoffs over synthetic shortcuts.</p>
+            </header>
+            <div class="axiom-ledger">
+              <div class="axiom-card"><h3>Embrace the constraint</h3><p>Latency, local execution, cost, and process isolation first.</p></div>
+              <div class="axiom-card"><h3>Expose runtime state</h3><p>Observable streams, typed SQLite tables, cryptographic receipts.</p></div>
+              <div class="axiom-card"><h3>Verify under stress</h3><p>Deterministic reference benchmarks guide every architecture choice.</p></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="slot-work">
+          <section class="folder-archive-section" data-variant-work="folders">
+            <header class="chapter-heading">
+              <span class="section-label">Source manifest</span>
+              <h2>Three repositories,<br /><em>three runtime trees</em></h2>
+              <p class="chapter-aside">Direct links to core builds, open-source repositories, and trust protocols.</p>
+            </header>
+            <div class="folder-deck">
+              <div class="folder-card"><strong>Core Systems</strong><small>4 builds</small></div>
+              <div class="folder-card"><strong>Open Source</strong><small>4 repositories</small></div>
+              <div class="folder-card"><strong>Risk &amp; Trust</strong><small>2 architectures</small></div>
+            </div>
+          </section>
+
+          <section class="work-section secondary-work" data-variant-work="ledger">
+            <span class="section-label">Runtime index</span>
+            <h2>Different domains,<br /><em>the same engineering discipline</em></h2>
+            <div class="work-list">
+              <div class="work-row-mock"><span>01</span><strong>Fleetorch</strong><small>Low-overhead PTY multiplexer</small><svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></div>
+              <div class="work-row-mock"><span>02</span><strong>Mnemium</strong><small>Local SQLite vector &amp; lexical engine</small><svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></div>
+              <div class="work-row-mock"><span>03</span><strong>Syntra</strong><small>Provenance DAG risk analyzer</small><svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></div>
+              <div class="work-row-mock"><span>04</span><strong>GhostSignal</strong><small>Zero-knowledge commit-reveal scheme</small><svg class="row-arrow arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></div>
+            </div>
+          </section>
+
+          <section class="inspector-section" data-variant-work="inspector">
+            <header class="chapter-heading">
+              <span class="section-label">Runtime workbench</span>
+              <h2>Architecture specs<br /><em>and source invariants</em></h2>
+              <p class="chapter-aside">Inspect core constraints across Syntra, GhostSignal, Draftdeckai, Fleetorch, and HookGuard.</p>
+            </header>
+          </section>
+        </div>
+
+        <aside class="work-preview" aria-hidden="true"></aside>
+
+        <section class="research-section research-shelf">
+          <header class="chapter-heading">
+            <span class="section-label">Empirical verification</span>
+            <h2>Beyond heuristic<br /><em>shortcuts</em></h2>
+            <p class="chapter-aside">Active investigation across desktop automation, semantic workbook graphs, and event-camera vision.</p>
+          </header>
+          <div class="research-sheets">
+            <article class="research-sheet" data-research-sheet>
+              <div class="sheet-topline"><span>Desktop automation</span><span>AST replay</span></div>
+              <h3>Phantom</h3>
+              <p class="sheet-deck">Compile demonstrated Linux workflows into replayable execution graphs</p>
+              <div class="research-process" aria-hidden="true"><span>Observe</span><span>Compile AST</span><strong>Native replay</strong></div>
+              <p>Turns demonstrated desktop tasks into parameterized graphs that replay locally through OS accessibility trees, falling back to an agent only when recovery is needed.</p>
+              <span class="text-link">Read technical manuscript</span>
+            </article>
+            <article class="research-sheet" data-research-sheet>
+              <div class="sheet-topline"><span>Spreadsheet AI</span><span>Topological graph</span></div>
+              <h3>SAN / SWG</h3>
+              <p class="sheet-deck">Coordinate-free table resolution that preserves semantic identity</p>
+              <div class="research-process" aria-hidden="true"><span>Workbook</span><span>Semantic map</span><strong>Dependency trace</strong></div>
+              <p>A semantic workbook graph for finding tables and artifacts by meaning, tracking identity across structural sheet edits, and tracing formula dependencies.</p>
+              <span class="text-link">Read technical manuscript</span>
+            </article>
+            <article class="research-sheet" data-research-sheet>
+              <div class="sheet-topline"><span>Neuromorphic vision</span><span>Rust core</span></div>
+              <h3>TropiCam</h3>
+              <p class="sheet-deck">Max-plus tropical algebra for event-camera motion estimation</p>
+              <div class="event-surface" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              <p>A CPU-first Rust time-surface ingestion core with Python C-bindings and synthetic reference test coverage for non-linear sensor motion modeling.</p>
+              <span class="text-link">Inspect Rust source</span>
+            </article>
+          </div>
+        </section>
+
+        <div class="slot-telemetry">
+          <section class="activity-section">
+            <header class="chapter-heading">
+              <span class="section-label">Commit ledger</span>
+              <h2>Verified public<br /><em>commit telemetry</em></h2>
+              <p class="chapter-aside">Direct GraphQL snapshot of @msnotfound across 53 weeks of public repositories.</p>
+            </header>
+            <div class="activity-shell">
+              <div class="activity-kpis">
+                <div class="activity-kpi"><strong>377</strong><span>Yearly contributions</span></div>
+                <div class="activity-kpi"><strong>43</strong><span>Active shipping days</span></div>
+                <div class="activity-kpi"><strong>122</strong><span>Peak single-day commits</span></div>
+                <div class="activity-kpi"><strong>232</strong><span>Peak monthly volume</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="notebook-gates">
+          <div class="notebook-gate gate-feed">
+            <span class="section-label">Source tree</span>
+            <strong>Open-source<br /><em>Repositories</em></strong>
+            <span>Runtime builds &amp; source code</span>
+            <span class="gate-type" aria-hidden="true">/code</span>
+          </div>
+          <div class="notebook-gate gate-notes">
+            <span class="section-label">Applied research</span>
+            <strong>Technical<br /><em>Manuscripts</em></strong>
+            <span>Formal specs &amp; write-ups</span>
+            <span class="gate-type" aria-hidden="true">/notes</span>
+          </div>
+        </section>
+
+        <footer class="contact-section">
+          <span class="section-label">Direct line</span>
+          <h2>Have a system to stress-test?<br /><em>Let’s build the proof</em></h2>
+
+          <div class="main-contact-dispatch">
+            <div class="dispatch-card">
+              <div>
+                <span class="dispatch-kicker">Primary inbox</span>
+                <div class="dispatch-title">hello@mayanksahu.dev</div>
+                <p class="dispatch-desc">Direct line for systems engineering, agent orchestration, and focused contract builds.</p>
+              </div>
+              <div class="dispatch-btn dispatch-btn--secondary">Copy email address</div>
+            </div>
+
+            <div class="dispatch-card">
+              <div>
+                <span class="dispatch-kicker">Project brief</span>
+                <div class="dispatch-title">Start a conversation</div>
+                <p class="dispatch-desc">Send project constraints, timeline, or schedule a technical walkthrough.</p>
+              </div>
+              <div class="dispatch-btn dispatch-btn--primary">Open contact page</div>
+            </div>
+          </div>
+
+          <div class="contact-links">
+            <span class="text-link">GitHub</span>
+            <span class="text-link">Launch mail client</span>
+            <span class="text-link">Back to systems</span>
+          </div>
+          <div class="footer-colophon">
+            <span>Mayank Sahu, 2026 — AI systems &amp; applied research, India (IST)</span>
+            <span>Back to top</span>
+          </div>
+        </footer>
       </div>
-    </div>
-  </section>
+    </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-900 py-8 px-4 text-center text-xs font-mono text-slate-600">
-    <p>© 2026 Mayank Sahu. Built for speed, conversions, and clean systems architecture.</p>
-  </footer>
+    <script src="./vendor/gsap.min.js"></script>
+    <script src="./vendor/ScrollTrigger.min.js"></script>
+    <script type="module">
+      import { createCursorMaskController, createMagneticButtonController, createWorkPreviewController } from "./src/cursorMask.mjs";
+      import { createAmbientAudioController } from "./src/ambientAudio.mjs";
+      import { initInitialLoader } from "./src/initialLoader.mjs";
+      import { initThemeToggle } from "./src/themeToggle.mjs";
+      import { createFolioExperience } from "./src/folioExperience.mjs";
+      import {
+        initEditionEngine,
+        initHeroCanvas,
+        initCommandPalette,
+        initScrollRail,
+        initCapabilityMatrix,
+        initAxiomLedger,
+        initFolderArchive,
+        initSystemInspector,
+        initGithubActivity,
+        initIstClock,
+        initExtraRevealSync,
+      } from "./src/components.mjs";
 
-  <!-- Lenis + Ambient Canvas + 3D Tilt Scripts -->
-  <script>
-    // Initialize Lenis Inertial Smooth Scrolling
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1.1,
-    });
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
+      const root = document.querySelector("[data-mask-root]");
+      root.id = "top";
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+      const pointer = matchMedia("(hover: hover) and (pointer: fine)");
+      initInitialLoader(document, { delay: 260 });
+      initThemeToggle(document);
+      createAmbientAudioController(document);
+      const experience = createFolioExperience(document);
 
-    // Interactive 3D Specular Tilt on Glass Cards
-    document.querySelectorAll('.tilt-card').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -5;
-        const rotateY = ((x - centerX) / centerX) * 5;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+      const syncReveal = initExtraRevealSync(document);
+      const heroCanvas = initHeroCanvas(document);
+      const edition = initEditionEngine(document, () => {
+        heroCanvas.redraw();
+        syncReveal();
       });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-      });
-    });
 
-    // 60fps Ambient Particle Mesh Canvas (Zero Asset Download Lag)
-    (function initAmbientCanvas() {
-      const canvas = document.getElementById('ambient-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let width, height;
-      let mouseX = -1000, mouseY = -1000;
+      initCommandPalette(document, edition);
+      initScrollRail(document);
+      initCapabilityMatrix(document);
+      initAxiomLedger(document);
+      initFolderArchive(document, syncReveal);
+      initSystemInspector(document, syncReveal);
+      initGithubActivity(document);
+      initIstClock(document);
 
-      function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = canvas.parentElement.offsetHeight;
+      let pointerControllers = [];
+
+      function configurePointer() {
+        pointerControllers.forEach((controller) => controller.destroy());
+        pointerControllers = [];
+        if (!reduced.matches && pointer.matches) {
+          pointerControllers = [
+            createCursorMaskController(root, { ease: 0.16 }),
+            createMagneticButtonController(document),
+            createWorkPreviewController(document),
+          ];
+        }
+        document.documentElement.dataset.customCursor = String(pointerControllers.length > 0);
       }
-      resize();
-      window.addEventListener('resize', resize);
-      window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY + window.scrollY;
-      });
 
-      const particles = [];
-      const count = Math.min(width < 768 ? 35 : 75, 75);
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          radius: Math.random() * 1.5 + 0.8
+      configurePointer();
+      reduced.addEventListener("change", configurePointer);
+      pointer.addEventListener("change", configurePointer);
+      window.addEventListener(
+        "pagehide",
+        (event) => {
+          if (event.persisted) return;
+          pointerControllers.forEach((controller) => controller.destroy());
+          heroCanvas.destroy();
+          experience.destroy();
+        },
+        { once: true },
+      );
+
+      // Copy email with blurred icon swap (no emoji)
+      const copyBtn = document.getElementById("main-copy-email");
+      if (copyBtn) {
+        const label = copyBtn.querySelector("[data-copy-label]");
+        let resetTimer = 0;
+        copyBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText("hello@mayanksahu.dev");
+            copyBtn.dataset.swapped = "true";
+            if (label) label.textContent = "Email copied";
+            clearTimeout(resetTimer);
+            resetTimer = setTimeout(() => {
+              copyBtn.dataset.swapped = "false";
+              if (label) label.textContent = "Copy email address";
+            }, 2200);
+          } catch {
+            window.location.href = "mailto:hello@mayanksahu.dev";
+          }
         });
       }
-
-      function animate() {
-        ctx.clearRect(0, 0, width, height);
-        
-        // Draw connected mesh lines
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          p.x += p.vx;
-          p.y += p.vy;
-
-          if (p.x < 0 || p.x > width) p.vx *= -1;
-          if (p.y < 0 || p.y > height) p.vy *= -1;
-
-          // Mouse reactivity
-          const dxMouse = mouseX - p.x;
-          const dyMouse = mouseY - p.y;
-          const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          if (distMouse < 180) {
-            p.x -= (dxMouse / distMouse) * 0.8;
-            p.y -= (dyMouse / distMouse) * 0.8;
-          }
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(99, 102, 241, 0.45)';
-          ctx.fill();
-
-          for (let j = i + 1; j < particles.length; j++) {
-            const p2 = particles[j];
-            const dx = p.x - p2.x;
-            const dy = p.y - p2.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 120) {
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.strokeStyle = `rgba(99, 102, 241, ${0.12 * (1 - dist / 120)})`;
-              ctx.lineWidth = 0.7;
-              ctx.stroke();
-            }
-          }
-        }
-        requestAnimationFrame(animate);
-      }
-      animate();
-    })();
-
-    function portfolioApp() {
-      return {
-        projectType: 'business',
-        addonAutomation: true,
-        addonSpeed: false,
-        contactName: '',
-        contactReach: '',
-        contactBrief: '',
-        submitted: false,
-        calculateTotal() {
-          let base = 250;
-          if (this.projectType === 'landing') base = 250;
-          if (this.projectType === 'business') base = 450;
-          if (this.projectType === 'fullstack') base = 950;
-          if (this.addonAutomation) base += 150;
-          if (this.addonSpeed) base += 100;
-          return base;
-        },
-        calculateTimeline() {
-          if (this.addonSpeed) return 'Turnaround: Guaranteed within 48 hours';
-          if (this.projectType === 'landing') return 'Turnaround: 48 - 72 hours';
-          if (this.projectType === 'business') return 'Turnaround: 3 - 4 business days';
-          return 'Turnaround: 5 - 7 business days';
-        },
-        openConsultation(scope) {
-          this.contactBrief = 'I am looking for: ' + scope;
-          document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-        },
-        submitContact() {
-          this.submitted = true;
-          setTimeout(() => {
-            alert('Thanks! Your brief has been sent. You can also DM directly on Threads or email 108mayanksahu@gmail.com');
-          }, 400);
-        }
-      }
-    }
-  </script>
-</body>
+    </script>
+  </body>
 </html>
