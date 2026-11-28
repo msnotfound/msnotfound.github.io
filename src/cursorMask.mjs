@@ -395,106 +395,221 @@ export function createWorkPreviewController(root = document, options = {}) {
   const items = [...root.querySelectorAll("[data-preview-title]")];
   if (!preview || !track || !list || items.length === 0) return { destroy() {} };
 
-  const defaultMotion = getPreviewMotionConfig();
-  const offset = options.offset ?? defaultMotion.offset;
-  const previewSize = options.previewSize ?? {
-    width: defaultMotion.width,
-    height: defaultMotion.height,
-  };
-  const previewGap = options.gap ?? defaultMotion.gap;
-  const ease = options.ease ?? defaultMotion.ease;
+  const bounce = root.querySelector("[data-work-preview-bounce]");
+  const previewBtn = root.querySelector("[data-work-preview-btn]");
+  const previewSpan = root.querySelector("[data-work-preview-span]");
+  const view = root.defaultView ?? root.ownerDocument?.defaultView ?? window;
+  const docEl = root.documentElement ?? root.ownerDocument?.documentElement;
+
   let animationFrame = 0;
-  let current = { x: -999, y: -999 };
-  let target = { ...current };
+  let lastTime = 0;
+  let hasPointer = false;
   let isActive = false;
   let activeIndex = -1;
-  let pendingPointer = null;
-  let lastPointer = null;
-  const view = root.defaultView ?? root.ownerDocument?.defaultView ?? window;
+  let bounceTimer = 0;
+  let pendingListPointer = null;
+  let pendingScrollCheck = false;
+
+  let mouse = { x: (view.innerWidth || 1200) / 2, y: (view.innerHeight || 800) / 2 };
+  let posImg = { ...mouse };
+  let posBtn = { ...mouse };
+  let posSpan = { ...mouse };
+
+  const setActiveState = (active) => {
+    const val = active ? "true" : "false";
+    preview.dataset.active = val;
+    if (previewBtn) previewBtn.dataset.active = val;
+    if (previewSpan) previewSpan.dataset.active = val;
+    if (docEl) docEl.dataset.workPreviewActive = val;
+  };
+
+  const setPressedState = (pressed) => {
+    const val = pressed ? "true" : "false";
+    if (previewBtn) previewBtn.dataset.pressed = val;
+    if (previewSpan) previewSpan.dataset.pressed = val;
+  };
 
   const updatePreview = (item, index) => {
-    if (index === activeIndex) return;
+    if (index === activeIndex || index < 0) return;
+    const prevIndex = activeIndex;
     activeIndex = index;
-    const offset = computePreviewTrackOffset(index, previewSize.height, previewGap);
-    track.style.transform = offset.css;
     preview.dataset.variant = item.dataset.previewVariant || "default";
-  };
 
-  const movePreview = (event) => {
-    const position = computeFloatingPreviewPosition(
-      event,
-      { width: view.innerWidth, height: view.innerHeight },
-      previewSize,
-      offset,
-    );
-    target = { x: position.x, y: position.y };
+    const gsap = view.gsap;
+    if (gsap && typeof gsap.to === "function") {
+      gsap.to(track, {
+        yPercent: -index * 100,
+        duration: prevIndex === -1 ? 0 : 0.6,
+        ease: "power2.inOut",
+        overwrite: "auto",
+      });
+    } else {
+      track.style.transform = `translate3d(0, ${-index * 100}%, 0)`;
+    }
 
-    if (current.x < 0 || current.y < 0) {
-      current = { ...target };
-      preview.style.transform = position.css;
+    if (bounce && prevIndex !== -1) {
+      bounce.classList.add("is-bouncing");
+      view.clearTimeout?.(bounceTimer);
+      bounceTimer = view.setTimeout?.(() => {
+        bounce.classList.remove("is-bouncing");
+      }, 220) ?? 0;
     }
   };
 
-  const renderPreview = () => {
-    if (pendingPointer) {
+  // Frame-rate normalized Dennis Snellenberg chase:
+  // Image /12, Circle /7, Label /6 at Dennis's 120Hz tick (8.333ms)
+  const stepFactor = (divisor, dtMs) => {
+    const base = 1 / divisor;
+    const steps = clamp(dtMs / 8.3333, 0.4, 3.2);
+    return 1 - Math.pow(1 - base, steps);
+  };
+
+  const renderPreview = (now = 0) => {
+    if (pendingListPointer) {
       const itemRects = items.map((item) => item.getBoundingClientRect());
       const nextIndex = decidePreviewIndex(
-        pendingPointer.clientY, itemRects, activeIndex, options.hysteresis ?? 18,
+        pendingListPointer.clientY,
+        itemRects,
+        activeIndex,
+        options.hysteresis ?? 12,
       );
       if (nextIndex >= 0) updatePreview(items[nextIndex], nextIndex);
-      preview.dataset.active = "true";
-      movePreview(pendingPointer);
-      pendingPointer = null;
+      setActiveState(true);
+      pendingListPointer = null;
+      pendingScrollCheck = false;
+    } else if (pendingScrollCheck) {
+      pendingScrollCheck = false;
+      if (isActive && hasPointer) {
+        const listRect = list.getBoundingClientRect();
+        const inside =
+          mouse.x >= listRect.left &&
+          mouse.x <= listRect.right &&
+          mouse.y >= listRect.top &&
+          mouse.y <= listRect.bottom;
+        if (inside) {
+          const itemRects = items.map((item) => item.getBoundingClientRect());
+          const nextIndex = decidePreviewIndex(mouse.y, itemRects, activeIndex, 10);
+          if (nextIndex >= 0) updatePreview(items[nextIndex], nextIndex);
+        } else {
+          handleLeave();
+        }
+      }
     }
-    current = interpolatePosition(current, target, ease);
-    preview.style.transform = `translate3d(${current.x.toFixed(2)}px, ${current.y.toFixed(2)}px, 0)`;
 
-    const deltaX = Math.abs(current.x - target.x);
-    const deltaY = Math.abs(current.y - target.y);
-    if (deltaX > 0.5 || deltaY > 0.5) {
+    const dt = lastTime ? Math.max(4, now - lastTime) : 16.67;
+    lastTime = now;
+
+    posImg = interpolatePosition(posImg, mouse, stepFactor(12, dt));
+    posBtn = interpolatePosition(posBtn, mouse, stepFactor(7, dt));
+    posSpan = interpolatePosition(posSpan, mouse, stepFactor(6, dt));
+
+    preview.style.transform = `translate3d(${posImg.x.toFixed(2)}px, ${posImg.y.toFixed(2)}px, 0) translate(-50%, -52%)`;
+    if (previewBtn) {
+      previewBtn.style.transform = `translate3d(${posBtn.x.toFixed(2)}px, ${posBtn.y.toFixed(2)}px, 0) translate(-50%, -56%)`;
+    }
+    if (previewSpan) {
+      previewSpan.style.transform = `translate3d(${posSpan.x.toFixed(2)}px, ${posSpan.y.toFixed(2)}px, 0) translate(-50%, -56%)`;
+    }
+
+    const settled =
+      Math.abs(posImg.x - mouse.x) < 0.35 &&
+      Math.abs(posImg.y - mouse.y) < 0.35 &&
+      Math.abs(posBtn.x - mouse.x) < 0.35 &&
+      Math.abs(posBtn.y - mouse.y) < 0.35;
+
+    if (!settled) {
       animationFrame = view.requestAnimationFrame(renderPreview);
     } else {
       animationFrame = 0;
+      lastTime = 0;
     }
   };
 
   const startAnimation = () => {
     if (!animationFrame) {
+      lastTime = 0;
       animationFrame = view.requestAnimationFrame(renderPreview);
     }
   };
 
-  const handleMove = (event) => {
-    isActive = true;
-    pendingPointer = { clientX: event.clientX, clientY: event.clientY };
-    lastPointer = pendingPointer;
+  // Keep Dennis's 3 layers warm at cursor position across the whole viewport
+  const handleGlobalMove = (event) => {
+    if (event.pointerType === "touch") return;
+    mouse = { x: event.clientX, y: event.clientY };
+    if (!hasPointer) {
+      hasPointer = true;
+      posImg = { ...mouse };
+      posBtn = { ...mouse };
+      posSpan = { ...mouse };
+    }
     startAnimation();
+  };
+
+  const handleListMove = (event) => {
+    if (event.pointerType === "touch") return;
+    isActive = true;
+    pendingListPointer = { clientX: event.clientX, clientY: event.clientY };
+    handleGlobalMove(event);
   };
 
   const handleLeave = () => {
     isActive = false;
-    pendingPointer = null;
+    pendingListPointer = null;
+    pendingScrollCheck = false;
     activeIndex = -1;
-    preview.dataset.active = "false";
+    setPressedState(false);
+    setActiveState(false);
   };
 
-  const handleGeometryChange = () => {
-    if (isActive && lastPointer) handleMove(lastPointer);
+  const handleScroll = () => {
+    if (!isActive || !hasPointer) return;
+    pendingScrollCheck = true;
+    startAnimation();
   };
 
-  list.addEventListener("pointermove", handleMove);
+  const handleDown = () => {
+    if (isActive) setPressedState(true);
+  };
+
+  const handleUp = () => {
+    setPressedState(false);
+  };
+
+  const itemHandlers = items.map((item, index) => {
+    const onEnter = (event) => {
+      if (event.pointerType === "touch") return;
+      handleGlobalMove(event);
+      isActive = true;
+      updatePreview(item, index);
+      setActiveState(true);
+    };
+    item.addEventListener("pointerenter", onEnter);
+    return { item, onEnter };
+  });
+
+  view.addEventListener("pointermove", handleGlobalMove, { passive: true });
+  list.addEventListener("pointermove", handleListMove);
   list.addEventListener("pointerleave", handleLeave);
-  view.addEventListener("scroll", handleLeave, { passive: true });
-  view.addEventListener("resize", handleGeometryChange);
+  list.addEventListener("pointerdown", handleDown);
+  view.addEventListener("pointerup", handleUp);
+  view.addEventListener("scroll", handleScroll, { passive: true });
   view.addEventListener("blur", handleLeave);
 
   return {
     destroy() {
-      list.removeEventListener("pointermove", handleMove);
+      itemHandlers.forEach(({ item, onEnter }) => {
+        item.removeEventListener("pointerenter", onEnter);
+      });
+      view.removeEventListener("pointermove", handleGlobalMove);
+      list.removeEventListener("pointermove", handleListMove);
       list.removeEventListener("pointerleave", handleLeave);
-      view.removeEventListener("scroll", handleLeave);
-      view.removeEventListener("resize", handleGeometryChange);
+      list.removeEventListener("pointerdown", handleDown);
+      view.removeEventListener("pointerup", handleUp);
+      view.removeEventListener("scroll", handleScroll);
       view.removeEventListener("blur", handleLeave);
+      view.clearTimeout?.(bounceTimer);
+      setPressedState(false);
+      setActiveState(false);
       if (animationFrame) view.cancelAnimationFrame(animationFrame);
     },
   };

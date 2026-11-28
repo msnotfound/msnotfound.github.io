@@ -215,6 +215,42 @@
       </span>
     </button>
 
+    <!-- Dennis Snellenberg 3-Layer Floating Work Preview (Image /12, Circle /7, Label /6) -->
+    <aside class="work-preview" data-work-preview aria-hidden="true">
+      <div class="work-preview-shell">
+        <div class="work-preview-bounce" data-work-preview-bounce>
+          <div class="work-preview-track" data-work-preview-track>
+            <article class="work-preview-card" data-preview-tone="fleetorch">
+              <div class="work-preview-plate">
+                <img src="./assets/fleetorch.webp" alt="" width="1200" height="840" />
+              </div>
+              <div class="work-preview-caption"><span>01 · Go / PTY</span><strong>Fleetorch</strong></div>
+            </article>
+            <article class="work-preview-card" data-preview-tone="mnemium">
+              <div class="work-preview-plate">
+                <img src="./assets/mnemium.webp" alt="" width="1200" height="840" />
+              </div>
+              <div class="work-preview-caption"><span>02 · Local AI</span><strong>Mnemium</strong></div>
+            </article>
+            <article class="work-preview-card" data-preview-tone="syntra">
+              <div class="work-preview-plate">
+                <img src="./assets/syntra.webp" alt="" width="1200" height="840" />
+              </div>
+              <div class="work-preview-caption"><span>03 · Risk DAG</span><strong>Syntra</strong></div>
+            </article>
+            <article class="work-preview-card" data-preview-tone="ghostsignal">
+              <div class="work-preview-plate">
+                <img src="./assets/ghostsignal.webp" alt="" width="1200" height="840" />
+              </div>
+              <div class="work-preview-caption"><span>04 · ZK Commit</span><strong>GhostSignal</strong></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="work-preview-btn" data-work-preview-btn aria-hidden="true"><span class="work-preview-btn-inner"></span></div>
+    <div class="work-preview-span" data-work-preview-span aria-hidden="true"><span class="work-preview-span-inner">View</span></div>
+
     <main class="main-layer js-pageContent" id="top" data-mask-root>
       <!-- ==============================================================
            BASE LAYER (Surface Portfolio — Zero Repetition Across Slots)
@@ -721,15 +757,6 @@
           </section>
         </div>
 
-        <aside class="work-preview" data-work-preview aria-hidden="true">
-          <div class="work-preview-track" data-work-preview-track>
-            <article class="work-preview-card"><img src="./assets/fleetorch.webp" alt="" width="1200" height="840" /><p>Go, agent infrastructure</p><h3>Fleetorch</h3><span>PTY-backed execution, isolated worktrees, and live inspection.</span></article>
-            <article class="work-preview-card"><img src="./assets/mnemium.webp" alt="" width="1200" height="840" /><p>Local AI memory</p><h3>Mnemium</h3><span>Typed memories with local distillation and hybrid retrieval.</span></article>
-            <article class="work-preview-card"><img src="./assets/syntra.webp" alt="" width="1200" height="840" /><p>Risk and provenance</p><h3>Syntra</h3><span>Supplier relationships, provenance graphs, alerts, and decisions.</span></article>
-            <article class="work-preview-card"><img src="./assets/ghostsignal.webp" alt="" width="1200" height="840" /><p>ZK commitments</p><h3>GhostSignal</h3><span>Commitment and reveal mechanisms for agent-generated signals.</span></article>
-          </div>
-        </aside>
-
         <!-- DEDICATED RESEARCH SHELF (Never duplicated in work slot above) -->
         <section class="research-section research-shelf" id="research-engineering" aria-labelledby="research-title">
           <header class="chapter-heading">
@@ -1198,6 +1225,7 @@
         initGithubActivity,
         initIstClock,
         initExtraRevealSync,
+        initSmoothScroll,
       } from "./src/components.mjs";
 
       const root = document.querySelector("[data-mask-root]");
@@ -1210,6 +1238,7 @@
       const experience = createFolioExperience(document);
 
       const syncReveal = initExtraRevealSync(document);
+      const smoothScroll = initSmoothScroll(document);
       const heroCanvas = initHeroCanvas(document);
       const edition = initEditionEngine(document, () => {
         heroCanvas.redraw();
@@ -1248,6 +1277,7 @@
         (event) => {
           if (event.persisted) return;
           pointerControllers.forEach((controller) => controller.destroy());
+          smoothScroll.destroy();
           heroCanvas.destroy();
           experience.destroy();
         },

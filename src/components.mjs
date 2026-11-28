@@ -753,3 +753,138 @@ export function initExtraRevealSync(doc = document) {
 
   return sync;
 }
+
+// Weighted Inertial Smooth Scroll (Locomotive / Lenis style damping on desktop wheel)
+// Drives native window.scrollTo so GSAP ScrollTrigger pins, fixed chrome, modals, and scrollbar stay 100% intact.
+export function initSmoothScroll(doc = document, options = {}) {
+  const view = doc.defaultView ?? window;
+  const reduced = view.matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = view.matchMedia("(hover: hover) and (pointer: fine)");
+
+  const lerp = options.lerp ?? 0.088;
+  const wheelMultiplier = options.wheelMultiplier ?? 0.92;
+
+  let raf = 0;
+  let lastTime = 0;
+  let currentY = view.scrollY || 0;
+  let targetY = currentY;
+  let lastWrittenY = -1;
+
+  const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+  const maxScroll = () => Math.max(0, doc.documentElement.scrollHeight - view.innerHeight);
+
+  const stop = () => {
+    if (raf) {
+      view.cancelAnimationFrame(raf);
+      raf = 0;
+    }
+    lastTime = 0;
+    lastWrittenY = -1;
+    currentY = view.scrollY || 0;
+    targetY = currentY;
+  };
+
+  const hasScrollableAncestor = (el, deltaY) => {
+    let node = el instanceof Element ? el : el?.parentElement;
+    while (node && node !== doc.body && node !== doc.documentElement) {
+      const style = view.getComputedStyle(node);
+      const oy = style.overflowY;
+      if ((oy === "auto" || oy === "scroll") && node.scrollHeight > node.clientHeight + 2) {
+        const atTop = node.scrollTop <= 0 && deltaY < 0;
+        const atBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 1 && deltaY > 0;
+        if (!atTop && !atBottom) return true;
+      }
+      node = node.parentElement;
+    }
+    return false;
+  };
+
+  const tick = (now) => {
+    const dt = lastTime ? Math.max(4, now - lastTime) : 16.67;
+    lastTime = now;
+
+    // Frame-rate normalized exponential damping
+    const steps = clamp(dt / 16.667, 0.35, 3);
+    const factor = 1 - Math.pow(1 - lerp, steps);
+    const max = maxScroll();
+    targetY = clamp(targetY, 0, max);
+    currentY += (targetY - currentY) * factor;
+
+    const done = Math.abs(targetY - currentY) < 0.35;
+    const nextY = done ? targetY : currentY;
+
+    lastWrittenY = nextY;
+    view.scrollTo({ top: nextY, behavior: "instant" });
+    view.ScrollTrigger?.update?.();
+
+    if (done) {
+      currentY = targetY;
+      raf = 0;
+      lastTime = 0;
+      lastWrittenY = -1;
+    } else {
+      raf = view.requestAnimationFrame(tick);
+    }
+  };
+
+  const onWheel = (e) => {
+    if (reduced.matches || !finePointer.matches) return;
+    if (e.ctrlKey || e.metaKey || e.defaultPrevented) return;
+    if (doc.body.classList.contains("is-loading")) return;
+    if (doc.querySelector("dialog[open]")) return;
+
+    // Normalize wheel delta across line/page/pixel modes
+    let dy = e.deltaY;
+    if (e.deltaMode === 1) dy *= 16;
+    else if (e.deltaMode === 2) dy *= view.innerHeight;
+    if (!dy || Math.abs(e.deltaX) > Math.abs(dy) * 1.2) return;
+    if (hasScrollableAncestor(e.target, dy)) return;
+
+    e.preventDefault();
+
+    if (!raf) {
+      currentY = view.scrollY || 0;
+      targetY = currentY;
+    }
+
+    const scaled = clamp(dy * wheelMultiplier, -280, 280);
+    targetY = clamp(targetY + scaled, 0, maxScroll());
+
+    if (!raf) {
+      lastTime = 0;
+      raf = view.requestAnimationFrame(tick);
+    }
+  };
+
+  const onNativeScroll = () => {
+    if (lastWrittenY >= 0 && Math.abs((view.scrollY || 0) - lastWrittenY) <= 2) return;
+    // User dragged scrollbar, pressed keys, or clicked an anchor tween — yield immediately
+    stop();
+  };
+
+  const onKeyDown = (e) => {
+    if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(e.key)) {
+      stop();
+    }
+  };
+
+  view.addEventListener("wheel", onWheel, { passive: false });
+  view.addEventListener("scroll", onNativeScroll, { passive: true });
+  view.addEventListener("pointerdown", stop, { passive: true });
+  view.addEventListener("touchstart", stop, { passive: true });
+  view.addEventListener("keydown", onKeyDown, { passive: true });
+  view.addEventListener("resize", stop, { passive: true });
+
+  return {
+    stop,
+    destroy() {
+      stop();
+      view.removeEventListener("wheel", onWheel);
+      view.removeEventListener("scroll", onNativeScroll);
+      view.removeEventListener("pointerdown", stop);
+      view.removeEventListener("touchstart", stop);
+      view.removeEventListener("keydown", onKeyDown);
+      view.removeEventListener("resize", stop);
+    },
+  };
+}
